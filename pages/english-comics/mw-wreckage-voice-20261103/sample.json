@@ -16,8 +16,8 @@
           "sha256": "c74ad72af6da5596d26e329646bd160e1207495fd005fc7c74d3531b681ee08b"
         },
         "chunked": {
-          "file": "assets/en1-chunked.mp3",
-          "sha256": "fa9e82cac0e6c4e81b909fa3c52ac39e2d23b8cb2dcf6a1fa03a0e0bb254d754"
+          "file": "assets/en1-chunked-whisper-v2.mp3",
+          "sha256": "76ab51d3f66953af2e23c666ddeef38e3836e5622f5fbe4f2636da1840c7c3c6"
         }
       },
       "durations": {
@@ -25,7 +25,7 @@
         "chunked": 3.38
       },
       "boundaries": [
-        1.3903124999999938
+        1.4300000000000002
       ],
       "engine": "qwen3-tts",
       "speaker": "Ono_Anna",
@@ -70,8 +70,8 @@
           "sha256": "b19a9de5ead320ef24591f73ef6c103d1e5c01c47593fc72b7bc716d65ee775b"
         },
         "chunked": {
-          "file": "assets/en2-chunked.mp3",
-          "sha256": "45931c2c3a946ee4fa57ceb7a058aafb0721881adaed98132a8c076ff790153b"
+          "file": "assets/en2-chunked-whisper-v2.mp3",
+          "sha256": "4a7602140f5967a1a4ca4268a78d7bd349e75fbea2f7c69416576d863827ddd8"
         }
       },
       "durations": {
@@ -79,7 +79,7 @@
         "chunked": 2.9
       },
       "boundaries": [
-        1.0406249999999995
+        1.32
       ],
       "engine": "qwen3-tts",
       "speaker": "Ono_Anna",
@@ -128,8 +128,8 @@
           "sha256": "d5f614fa4f2bd83b74bb99a70352f5febc6260a09dcb8d21f7ab21ac9a137c93"
         },
         "chunked": {
-          "file": "assets/en3-chunked.mp3",
-          "sha256": "2679264e83cbe54e011a9a8645dacd0fd59a14879a78464b74d4239679bc84a6"
+          "file": "assets/en3-chunked-whisper-v2.mp3",
+          "sha256": "cbdebd0433894eb15d01bf8b904073e8eee61310e9f590589740bbb56e13c7e8"
         }
       },
       "durations": {
@@ -137,10 +137,10 @@
         "chunked": 10.0
       },
       "boundaries": [
-        1.2410937500000003,
-        3.294088745117184,
-        5.172315704822534,
-        7.442081799535073
+        1.42,
+        3.74,
+        5.47,
+        7.24
       ],
       "engine": "qwen3-tts",
       "speaker": "Ono_Anna",
@@ -187,8 +187,8 @@
           "sha256": "0c037235cb02f40189468c4d54a950de104ac8fa305fd9211ae3a0cd786bc956"
         },
         "chunked": {
-          "file": "assets/en4-chunked.mp3",
-          "sha256": "6d7a36190176c279fdcb68adb49c97650a201e0500168b2980554b1d4bcf9a9f"
+          "file": "assets/en4-chunked-whisper-v2.mp3",
+          "sha256": "a7910201e56ed955c4e295cca2d1aa9aa4ded9154388db5e62adf57cce16a0aa"
         }
       },
       "durations": {
@@ -196,9 +196,9 @@
         "chunked": 7.58
       },
       "boundaries": [
-        1.251249999999996,
-        2.1154931640624994,
-        3.4897492599487294
+        1.06,
+        2.34,
+        3.6
       ],
       "engine": "qwen3-tts",
       "speaker": "Ono_Anna",
@@ -244,8 +244,8 @@
           "sha256": "d53a1052eed326fcadd4a68e597e79b475702d05a283487a32dd7c64340c9049"
         },
         "chunked": {
-          "file": "assets/en5-chunked.mp3",
-          "sha256": "42db64a61864240649fe986c8de0cf07eca87fb9c89ac13589ab6793b3bbbeeb"
+          "file": "assets/en5-chunked-whisper-v2.mp3",
+          "sha256": "559a680fb878d0cf4f93ba0c307446f2393ccb89d4a1b148925ac5e01e69a824"
         }
       },
       "durations": {
@@ -253,8 +253,8 @@
         "chunked": 5.56
       },
       "boundaries": [
-        1.176874999999997,
-        2.035085449218742
+        0.96,
+        1.98
       ],
       "engine": "qwen3-tts",
       "speaker": "Ono_Anna",
@@ -262,11 +262,13 @@
       "script_sha256": "8c95e01ea249696e31a0e2fde528b626cd0fae5b5841ad64261829de2e952bce"
     }
   ],
+  "version": "whisper-v2",
+  "alignment_model": "mlx-community/whisper-small.en-asr-8bit",
   "inserted_pause_seconds": 0.5,
   "total_seconds": {
     "original": 55.13,
     "chunked": 60.63
   },
-  "method": "Normal-speed Qwen Ono_Anna synthesis, then ASR-prefix/quiet-boundary editing. No regeneration per meaning chunk.",
+  "method": "Normal-speed Qwen Ono_Anna synthesis, then Whisper word-timestamp boundary editing. No regeneration per meaning chunk.",
   "note": "Prepared review sample, not registered as a learner assignment."
 }
