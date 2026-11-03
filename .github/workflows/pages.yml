@@ -1,0 +1,40 @@
+name: Publish HTML library
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Update searchable index
+        shell: pwsh
+        run: ./update-index.ps1
+      - uses: actions/configure-pages@v6
+      - name: Collect public files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path _site | Out-Null
+          Copy-Item -LiteralPath index.html -Destination _site/
+          Copy-Item -LiteralPath pages -Destination _site/ -Recurse
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
