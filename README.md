@@ -2,16 +2,16 @@
 
 HTML 제작은 `pages/`에 파일을 저장하는 작업이고, 게시는 `publish.ps1`을 실행하는 별도 작업입니다. Node, npm, Python, 외부 CDN은 필요 없습니다.
 
-- 자료실: https://jinhoofkepco.github.io/html-library/
-- 저장소: https://github.com/jinhoofkepco/html-library
+- 자료실: https://jinhoofkepco.github.io/temp.jinho/
+- 저장소: https://github.com/jinhoofkepco/temp.jinho
 
 ## Windows 11에서 사용
 
 최초 한 번 Git for Windows로 저장소를 복제하고 GitHub 인증을 완료합니다. Git 사용자 이름과 이메일도 설정되어 있어야 합니다. Windows 기본 PowerShell 5.1 이상을 사용합니다.
 
 ```powershell
-git clone https://github.com/jinhoofkepco/html-library.git
-cd html-library
+git clone https://github.com/jinhoofkepco/temp.jinho.git
+cd temp.jinho
 ```
 
 이후 HTML 파일 수십 개를 한꺼번에 `pages/`에 복사하고 저장소 폴더에서 실행합니다.
