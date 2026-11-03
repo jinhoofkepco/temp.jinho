@@ -1,0 +1,272 @@
+{
+  "word": "wreckage",
+  "title": "Wreckage · 만화 속 단어 설명",
+  "segments": [
+    {
+      "id": "en1",
+      "language": "en",
+      "text": "Look at the old boat. Can Ivy sail in it?",
+      "chunks": [
+        "Look at the old boat.",
+        "Can Ivy sail in it?"
+      ],
+      "audio": {
+        "original": {
+          "file": "assets/en1-original.mp3",
+          "sha256": "c74ad72af6da5596d26e329646bd160e1207495fd005fc7c74d3531b681ee08b"
+        },
+        "chunked": {
+          "file": "assets/en1-chunked.mp3",
+          "sha256": "fa9e82cac0e6c4e81b909fa3c52ac39e2d23b8cb2dcf6a1fa03a0e0bb254d754"
+        }
+      },
+      "durations": {
+        "original": 2.88,
+        "chunked": 3.38
+      },
+      "boundaries": [
+        1.3903124999999938
+      ],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "32cd8bb02a17d9f5ba6d56175a760685a21d95501ee972b60ca00abec80aec21"
+    },
+    {
+      "id": "ko1",
+      "language": "ko",
+      "text": "배 옆구리가 부서지고, 나무도 뚝 부러졌네. 이대로 타면 물이 들어오겠지?",
+      "audio": {
+        "original": {
+          "file": "assets/ko1-original.mp3",
+          "sha256": "8bf50af446bd2cd2caab454900dd6618d0fae472fadc9dc451905ed93b63b17d"
+        },
+        "chunked": {
+          "file": "assets/ko1-chunked.mp3",
+          "sha256": "8bf50af446bd2cd2caab454900dd6618d0fae472fadc9dc451905ed93b63b17d"
+        }
+      },
+      "durations": {
+        "original": 6.88,
+        "chunked": 6.88
+      },
+      "boundaries": [],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "ee931351ea9618a8aea7084de6384dbdb7815a9aa1c3f5a5b776c7d42db8b731"
+    },
+    {
+      "id": "en2",
+      "language": "en",
+      "text": "These broken pieces are wreckage.",
+      "chunks": [
+        "These broken pieces",
+        "are wreckage."
+      ],
+      "audio": {
+        "original": {
+          "file": "assets/en2-original.mp3",
+          "sha256": "b19a9de5ead320ef24591f73ef6c103d1e5c01c47593fc72b7bc716d65ee775b"
+        },
+        "chunked": {
+          "file": "assets/en2-chunked.mp3",
+          "sha256": "45931c2c3a946ee4fa57ceb7a058aafb0721881adaed98132a8c076ff790153b"
+        }
+      },
+      "durations": {
+        "original": 2.4,
+        "chunked": 2.9
+      },
+      "boundaries": [
+        1.0406249999999995
+      ],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "d3339be6188e5a133c703ecdf20e4c1215d878e9635e0a8d6c31e0ad41dbb278"
+    },
+    {
+      "id": "ko2",
+      "language": "ko",
+      "text": "wreckage는 무언가가 심하게 부서진 뒤에 남은 조각들이야. 여기서는 배가 부서지고 남은 나무와 배 조각들이지.",
+      "speech_text": "레키지는 무언가가 심하게 부서진 뒤에 남은 조각들이야. 여기서는 배가 부서지고 남은 나무와 배 조각들이지.",
+      "audio": {
+        "original": {
+          "file": "assets/ko2-original.mp3",
+          "sha256": "8c5941d023fa2e689a8fd474db0be8958c3bffdf35f3903a64fd682893418bd4"
+        },
+        "chunked": {
+          "file": "assets/ko2-chunked.mp3",
+          "sha256": "8c5941d023fa2e689a8fd474db0be8958c3bffdf35f3903a64fd682893418bd4"
+        }
+      },
+      "durations": {
+        "original": 8.48,
+        "chunked": 8.48
+      },
+      "boundaries": [],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "15b00696f1815b51f5e0160fa62190113a9d7c1b0a401c90aad480e5ec514699"
+    },
+    {
+      "id": "en3",
+      "language": "en",
+      "text": "Pip picks up a board. A boat? he asks. Ivy looks at it. Well, a very small piece of a boat!",
+      "chunks": [
+        "Pip picks up a board.",
+        "A boat? he asks.",
+        "Ivy looks at it.",
+        "Well, a very small piece",
+        "of a boat!"
+      ],
+      "audio": {
+        "original": {
+          "file": "assets/en3-original.mp3",
+          "sha256": "d5f614fa4f2bd83b74bb99a70352f5febc6260a09dcb8d21f7ab21ac9a137c93"
+        },
+        "chunked": {
+          "file": "assets/en3-chunked.mp3",
+          "sha256": "2679264e83cbe54e011a9a8645dacd0fd59a14879a78464b74d4239679bc84a6"
+        }
+      },
+      "durations": {
+        "original": 8.0,
+        "chunked": 10.0
+      },
+      "boundaries": [
+        1.2410937500000003,
+        3.294088745117184,
+        5.172315704822534,
+        7.442081799535073
+      ],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "6def2104ee50970d346d84d4ee4e4ccf1696c869be66b8fcbb0fe0ddcc03f57f"
+    },
+    {
+      "id": "ko3",
+      "language": "ko",
+      "text": "핍이 나무판 하나를 들고 이게 배야? 하니까, 아이비가 배의 아주 작은 조각이지! 하는 거야.",
+      "audio": {
+        "original": {
+          "file": "assets/ko3-original.mp3",
+          "sha256": "44b8ae15f9db9ddb8d21be7a5866ad288e34e24437dd4caf89a04580567ef1c3"
+        },
+        "chunked": {
+          "file": "assets/ko3-chunked.mp3",
+          "sha256": "44b8ae15f9db9ddb8d21be7a5866ad288e34e24437dd4caf89a04580567ef1c3"
+        }
+      },
+      "durations": {
+        "original": 7.6,
+        "chunked": 7.6
+      },
+      "boundaries": [],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "3fd51bcbc3e7c05c067a27f464dad797ee0953d88f21a7acbcc575cd629fa467"
+    },
+    {
+      "id": "en4",
+      "language": "en",
+      "text": "They cannot sail in the wreckage. But some pieces may help them build a new boat.",
+      "chunks": [
+        "They cannot sail",
+        "in the wreckage.",
+        "But some pieces",
+        "may help them build a new boat."
+      ],
+      "audio": {
+        "original": {
+          "file": "assets/en4-original.mp3",
+          "sha256": "0c037235cb02f40189468c4d54a950de104ac8fa305fd9211ae3a0cd786bc956"
+        },
+        "chunked": {
+          "file": "assets/en4-chunked.mp3",
+          "sha256": "6d7a36190176c279fdcb68adb49c97650a201e0500168b2980554b1d4bcf9a9f"
+        }
+      },
+      "durations": {
+        "original": 6.08,
+        "chunked": 7.58
+      },
+      "boundaries": [
+        1.251249999999996,
+        2.1154931640624994,
+        3.4897492599487294
+      ],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "09acdb52ffe819e4878dae35a236fd4607d2cc462627a657b906b191e6f649e0"
+    },
+    {
+      "id": "ko4",
+      "language": "ko",
+      "text": "부서진 배를 그대로 탈 수는 없어도, 튼튼한 조각은 새 배를 만드는 데 쓸 수 있겠네.",
+      "audio": {
+        "original": {
+          "file": "assets/ko4-original.mp3",
+          "sha256": "6cda270d8479f51878bbfd04fe3e0a81ff183d62c62d207986e1d818442521d8"
+        },
+        "chunked": {
+          "file": "assets/ko4-chunked.mp3",
+          "sha256": "6cda270d8479f51878bbfd04fe3e0a81ff183d62c62d207986e1d818442521d8"
+        }
+      },
+      "durations": {
+        "original": 6.0,
+        "chunked": 6.0
+      },
+      "boundaries": [],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "dd6fcd1d26f7f336801c5b7e773dfdacb6e26434066dad8751b053a76a405cd2"
+    },
+    {
+      "id": "en5",
+      "language": "en",
+      "text": "So wreckage is what is left when something is badly broken.",
+      "chunks": [
+        "So wreckage",
+        "is what is left",
+        "when something is badly broken."
+      ],
+      "audio": {
+        "original": {
+          "file": "assets/en5-original.mp3",
+          "sha256": "d53a1052eed326fcadd4a68e597e79b475702d05a283487a32dd7c64340c9049"
+        },
+        "chunked": {
+          "file": "assets/en5-chunked.mp3",
+          "sha256": "42db64a61864240649fe986c8de0cf07eca87fb9c89ac13589ab6793b3bbbeeb"
+        }
+      },
+      "durations": {
+        "original": 4.56,
+        "chunked": 5.56
+      },
+      "boundaries": [
+        1.176874999999997,
+        2.035085449218742
+      ],
+      "engine": "qwen3-tts",
+      "speaker": "Ono_Anna",
+      "generation_speed": 1.0,
+      "script_sha256": "8c95e01ea249696e31a0e2fde528b626cd0fae5b5841ad64261829de2e952bce"
+    }
+  ],
+  "inserted_pause_seconds": 0.5,
+  "total_seconds": {
+    "original": 55.13,
+    "chunked": 60.63
+  },
+  "method": "Normal-speed Qwen Ono_Anna synthesis, then ASR-prefix/quiet-boundary editing. No regeneration per meaning chunk.",
+  "note": "Prepared review sample, not registered as a learner assignment."
+}
