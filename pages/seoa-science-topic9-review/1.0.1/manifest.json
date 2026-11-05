@@ -1,0 +1,25 @@
+{
+ "version": "1.0.1",
+ "files": [
+  {
+   "path": "index.html",
+   "bytes": 33677,
+   "sha256": "89c95ce3cd19dd883c5d24f46f886fa091dd91e2ebe64f0543bb8bc6e549af48"
+  },
+  {
+   "path": "videos.json",
+   "bytes": 35039,
+   "sha256": "1ca86cba5a3ba7aabc153d503a567b55db220f92cadc7e47983dc3a141f06028"
+  },
+  {
+   "path": "media/l4-plucking-abrasion.jpg",
+   "bytes": 76927,
+   "sha256": "873c54804d507dfa2d1e4f0b9d7aaac2528fc2adb36059fd14dfbeffb446afac"
+  },
+  {
+   "path": "media/l4-plucking-abrasion.mp4",
+   "bytes": 2053265,
+   "sha256": "674acbc3759a7f97b8e262b13acd1583c84e95b1a1745692580b0828dc18cf52"
+  }
+ ]
+}
