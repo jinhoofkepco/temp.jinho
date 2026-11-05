@@ -1,0 +1,103 @@
+{
+ "unit_id": "seoa-science-l2-erosion-deposition",
+ "version": "1.0.1",
+ "changes": "deflation redrawn: surface lowers past a fixed stake, stones left behind",
+ "format": "grid time-lapse + code overlay, no narration",
+ "files": [
+  {
+   "path": "index.html",
+   "bytes": 10243,
+   "sha256": "2dd39ab401f4a3454ab4edf3eefb7d466bf3d35684566856a5f9021150b69faa"
+  },
+  {
+   "path": "media/cycle.mp4",
+   "bytes": 3386208,
+   "sha256": "84e048234094928ec1e9b324b22e17a13e71af24a0278110b926de549e79d0d0"
+  },
+  {
+   "path": "media/cycle.jpg",
+   "bytes": 80015,
+   "sha256": "fe1eb112d84683519f6a08295996f3d01e32b2e4f3469eb5f9c73920312c70ff"
+  },
+  {
+   "path": "media/landslide.mp4",
+   "bytes": 2281419,
+   "sha256": "303c7124ba58dab9b35e89579b1b8765038e0b71ad1425e0daa47f4994b35105"
+  },
+  {
+   "path": "media/landslide.jpg",
+   "bytes": 145531,
+   "sha256": "1c89d78b001175558ef1b0e88a3803440e393fea0e04155e6da0559207115fea"
+  },
+  {
+   "path": "media/mudflow.mp4",
+   "bytes": 2196317,
+   "sha256": "fd2ef2315849aeb9e2f1de12bdb22e28b5a0d053f47a31c779f75da512b7fb53"
+  },
+  {
+   "path": "media/mudflow.jpg",
+   "bytes": 136327,
+   "sha256": "8c027f14b2ad082c716eec5ccd41fb3e5e2ef5cdd5c7cefc8e66bfebe4e1ae39"
+  },
+  {
+   "path": "media/slump.mp4",
+   "bytes": 1563449,
+   "sha256": "726cda24104e65edddc52275f49f03162177b5c83339facbb65c72c89e4e314c"
+  },
+  {
+   "path": "media/slump.jpg",
+   "bytes": 102027,
+   "sha256": "8b8875d42a9c31c868bc6d464daeb6025878699f4d6dae92a9993a15104aaa52"
+  },
+  {
+   "path": "media/creep.mp4",
+   "bytes": 2610259,
+   "sha256": "d855790c61af51a0d8bebbfc72ce38f4442912ae9f10db7fda76094a758be852"
+  },
+  {
+   "path": "media/creep.jpg",
+   "bytes": 88817,
+   "sha256": "fbb86567131d61a2a58754e65b64630efcde8bd239bc139472f4c1ff7633d902"
+  },
+  {
+   "path": "media/deflation-v2.mp4",
+   "bytes": 1771136,
+   "sha256": "eb3e2534d7d08b361fffcede2a1cea567b8db7a647659771f9f0e703b6b4b9af"
+  },
+  {
+   "path": "media/deflation-v2.jpg",
+   "bytes": 64512,
+   "sha256": "d1f08438362dc4308946c362811543d77353168ff7406e27c7b6e0e186778f05"
+  },
+  {
+   "path": "media/abrasion.mp4",
+   "bytes": 1023901,
+   "sha256": "d1e9e46a635b8a9285c28837afeeccd289a8e6032c62add006a7cdd31b2e7447"
+  },
+  {
+   "path": "media/abrasion.jpg",
+   "bytes": 69197,
+   "sha256": "9e0174cc7fccad8709a18a14a95fecfebf973092a95d06ed51687e57c5109a9d"
+  },
+  {
+   "path": "media/dune.mp4",
+   "bytes": 1430346,
+   "sha256": "8ac1f4590d0b1e7293714673879ac61b7ed39c21c6395c6db50684dfb143c195"
+  },
+  {
+   "path": "media/dune.jpg",
+   "bytes": 28587,
+   "sha256": "da7ba86c5c7f6fc1bbc7beffcce00457d885660d5c775dfcbe0cf21702e899cb"
+  },
+  {
+   "path": "media/loess.mp4",
+   "bytes": 1605953,
+   "sha256": "3332a56f501eda92740636d716c5405545c209ae121c4d134cf2f25c1a9217d3"
+  },
+  {
+   "path": "media/loess.jpg",
+   "bytes": 99690,
+   "sha256": "b513f8a081df80e8296cff62c38f4e9c7681141251065d5d6e1ee31c27914bff"
+  }
+ ]
+}
