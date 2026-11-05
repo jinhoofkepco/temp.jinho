@@ -18,10 +18,27 @@ $items = @(Get-ChildItem -LiteralPath $pages -Recurse -Force)
 if (@($items | Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }).Count) {
     throw 'Symbolic links and junctions are not supported inside pages.'
 }
-$files = @($items | Where-Object { -not $_.PSIsContainer -and $_.Extension -match '^\.html?$' } |
-    Sort-Object FullName)
-$links = foreach ($file in $files) {
+$files = @($items | Where-Object { -not $_.PSIsContainer -and $_.Extension -match '^\.html?$' })
+$entries = foreach ($file in $files) {
     $relative = $file.FullName.Substring($pages.Length + 1).Replace('\', '/')
+    $pathspec = ':(literal)pages/' + $relative
+    $updated = $file.LastWriteTimeUtc
+    $committed = & git -C $root log -1 --format=%ct -- $pathspec
+    if ($LASTEXITCODE -ne 0) { throw ('Could not read Git history for ' + $relative) }
+    if ($committed) {
+        & git -C $root diff --quiet HEAD -- $pathspec
+        if ($LASTEXITCODE -eq 0) {
+            # Checkout times change across computers; committed content uses its own history.
+            $updated = ([DateTime] '1970-01-01T00:00:00Z').ToUniversalTime().AddSeconds([long]$committed)
+        } elseif ($LASTEXITCODE -ne 1) {
+            throw ('Could not inspect changes for ' + $relative)
+        }
+    }
+    [PSCustomObject]@{ Relative = $relative; Updated = $updated }
+}
+$entries = @($entries | Sort-Object @{ Expression = { $_.Updated }; Descending = $true }, Relative)
+$links = foreach ($entry in $entries) {
+    $relative = $entry.Relative
     $url = 'pages/' + (($relative.Split('/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/')
     $label = [Net.WebUtility]::HtmlEncode($relative)
     '        <li><a href="' + $url + '"><span>' + $label + '</span><span class="arrow" aria-hidden="true">&#8599;</span></a></li>'
