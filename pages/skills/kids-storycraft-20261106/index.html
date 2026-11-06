@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kids Storycraft · 스킬 자료실</title>
+<style>
+  :root { color-scheme: light; background: #f5f2e9; color: #223b36; font: 16px/1.65 system-ui,sans-serif; }
+  body { margin: 0; }
+  main { max-width: 56rem; margin: auto; padding: 2rem 1.25rem 4rem; }
+  a { color: #18654e; text-underline-offset: .2em; }
+  header { margin: 1.75rem 0; padding: clamp(1.4rem,5vw,3rem); background: #153f37; color: #f8f6e9; border-radius: 1rem; }
+  header p { max-width: 38rem; }
+  .version { font-size: .87rem; color: #d5e6cf; letter-spacing: .06em; }
+  h1 { margin: .3rem 0 .5rem; font-size: clamp(2.1rem,7vw,3.8rem); line-height: 1.08; }
+  h2 { font-size: 1.23rem; }
+  .download { display: inline-block; margin-top: .5rem; padding: .65rem 1rem; border-radius: .5rem; background: #f7dd99; color: #19382d; font-weight: 700; }
+  section, details { background: #fffefa; border: 1px solid #dcded0; border-radius: .8rem; padding: 1rem 1.25rem; margin: 1rem 0; }
+  summary { font-weight: 700; cursor: pointer; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .86rem; }
+  code { overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main>
+<a href="../../../index.html">← 자료실</a>
+<header>
+<p class="version">SKILL · 2026-11-06</p>
+<h1>Kids Storycraft</h1>
+<p>어린이 영어 이야기와 만화를 만드는 스킬입니다. 인물의 시도가 상황을 바꾸고, 카메라가 독자에게 그 변화를 보여 주도록 장면을 설계합니다.</p>
+<a class="download" href="kids-storycraft.zip" download>스킬 ZIP 다운로드</a>
+</header>
+<section aria-labelledby="changes">
+<h2 id="changes">이번 개정</h2>
+<ul>
+<li>앞 상황과 인물의 시도, 달라진 조건과 다음 선택을 연결합니다.</li>
+<li>각 컷에서 처음 보일 정보와 아직 가릴 정보를 카메라 위치와 함께 정합니다.</li>
+<li>단어가 필요한 장면을 기존 사건에 연결하고, 축약할 때도 행동과 농담을 살립니다.</li>
+</ul>
+</section>
+<section aria-labelledby="usage">
+<h2 id="usage">설치와 사용</h2>
+<p>ZIP을 풀고 안의 <code>kids-storycraft</code> 폴더 전체를 Codex의 스킬 폴더에 넣습니다. 설치 경로 예시는 <code>~/.codex/skills/kids-storycraft/</code>입니다. 대화에서 <code>$kids-storycraft</code>를 지정해 사용합니다.</p>
+<p>ZIP에는 스킬 본문, 참고 문서, 표시 설정이 들어 있습니다. 공개 배포용 문안에는 개인별 피드백 기록을 덜어냈습니다.</p>
+</section>
+<details>
+<summary>스킬 본문 펼치기</summary>
+<pre>---
+name: kids-storycraft
+description: &quot;Create and revise children&#x27;s English short stories, comics with companion prose, original episodes, and vocabulary scenes. Connect whole-story meaning to sentence and word choices, visible cause and effect, emotional acting, cinematic framing, and timed reveals. Also use for close reading of children&#x27;s fiction and improving these craft instructions.&quot;
+---
+
+# Kids Storycraft
+
+Use one connected design for events, reader expectations, prose, and images. This skill merges the former `korean-kids-story` and `kids-tv-storycraft`; it contains their reusable principles and feedback, adapted for English. It is writing guidance, not model training or proof of children&#x27;s preferences.
+
+Default to an English child-facing story, with concise discussion in the user&#x27;s language. If the audience is unspecified, around age eight is a provisional starting point. Assess English proficiency separately. Respect the current language, format, length, and reading-mode request. Earlier fifteen-sentence, middle-school, and 8/10/12-panel assignments are not permanent constraints. A prose request does not automatically require pictures or an HTML reader.
+
+## Default to one-take production
+
+Put the craft work into planning the first complete work and keep factual production records. In one-take production, retain the first generated outputs. Apply the review and revision sections when the user requests that work.
+
+A take may contain the planned calls for different scenes, pages, or audio, followed by saving, requested cropping, and assembly. It does not require putting an entire comic in one image call. Preserve the first returned result for each planned part; log tool errors without silently launching replacement generations. Follow explicit user instructions if another workflow is requested.
+
+For each produced work, follow [production records](references/production-records.md). Capture the actually used instructions, submitted inputs, and first outputs without adding an evaluation call or retrospective rationale. Keep these private records separate from the child-facing artifact and public packages.
+
+## Read only what the task needs
+
+- New story or substantive rewrite: [narrative design](references/narrative-design.md), [English prose](references/english-prose.md), and the [working defaults](references/user-context.md).
+- English difficulty, read-aloud versus independent reading: [audience and language](references/audience-and-language.md). Do not equate native-language publishing grades with EFL levels.
+- Several styles or repeated stories: [story modes](references/story-modes.md). Change the reader&#x27;s question and the mechanism of resolution, as well as the art.
+- New comic: use the first-completion workflow below and [visual causality](references/visual-causality.md); read the relevant framing, anticipation, and acting sections before generating art, rather than waiting for a reported failure.
+- Plan bodily responses and relationships: [emotional acting](references/emotion-acting.md).
+- Plan anticipation, emphasis, and exposure order: [dramatic emphasis](references/dramatic-emphasis.md).
+- Plan a sequence of images: [cinematography](references/cinematography.md). Choose views that carry the intended information.
+- Comics with prose, cutting existing art, HTML, or offline packages: [comics and readers](references/comics-and-readers.md).
+- One or two engaging scenes for a word or phrase: [vocabulary scenes](references/vocabulary-scenes.md). A word list is not a request for a full episode.
+- A particular TV narrative engine: the relevant section of [TV engines](references/tv-engines.md); use [earlier evidence](references/earlier-evidence.md) when checking its limits.
+- Source discovery or analysis: [research method](references/research-method.md) and [English source study](references/english-source-study.md). Earlier Korean, TV, and Disney observations are preserved in [earlier evidence](references/earlier-evidence.md); Korean folktale adaptation is optional, not a default theme.
+
+## Design the first complete work
+
+Choose the interesting situation, protagonist&#x27;s want, and reason to keep following it. For vocabulary work, choose the sense and a suitable conflict or discovery before fitting an opener around it. Connect attempts to consequences and decide the meaningful outcome.
+
+For a comic, outline the main turns before final prose or art. For each important turn, record `prior situation → attempt or discovery → changed condition and next choice`, then `what the reader first sees / what stays hidden / where the camera looks from`. Carry those decisions into the actual panel prompts. Use the same short plan throughout. An orientation, pause or reaction can earn its place through timing or emotion. See [narrative design](references/narrative-design.md) and [cinematography](references/cinematography.md) for examples.
+
+Choose actions with one readable instant and feasible visible evidence. Simplify an unnecessarily intricate mechanism while drafting, or distribute the necessary actions across scenes. Then finish the English and submit each requested image with the scene&#x27;s event and focal information first, followed by a physical camera position, frame boundaries, visible identity anchors, and necessary setting. Resolve conflicting framing demands before submission: a tight insert cannot also establish the whole cast and setting. Shared character design does not require every face, body, and prop in every frame; use the [camera commitment guidance](references/cinematography.md#commit-the-camera-in-the-submitted-prompt).
+
+Aim for a complete, followable event with a reason to continue, meaningful reactions and the requested vocabulary connection. Finish the planned take and retain its outputs; refinements can inform the next work when the user asks, rather than extending the current work into repeated artistic polishing.
+
+## Connect the whole story to the smallest choice
+
+Start with something the child or protagonist wants, the obstacle, and a choice that changes the situation. Let later attempts respond to earlier consequences. Establish the material property, ability, relationship, or clue needed for the outcome. End at the scale the events earn: a laugh, relief, altered relationship, unresolved question, or further trouble can all fit.
+
+At important changes, distinguish an observable fact, the character&#x27;s interpretation, and what the reader knows. Decide what the reader is waiting to find out. A small visible cause, a refusal, a delayed answer, or an ordinary object used differently can carry a dramatic point without a larger danger.
+
+For a difficult beat, use a compact working note:
+
+`desired meaning → visible fact/action or prose evidence → reader&#x27;s knowledge and expectation → body/voice or sentence choice → next change`
+
+Use only the fields that help. Do not turn every sentence into foreshadowing or every panel into a reversal. Orientation, listening, rest, and connective time also have jobs. Keep craft notes outside the child-facing story.
+
+## Write English for this event
+
+Draft or rebuild the line in English from its narrative function. Preserve the Korean work&#x27;s attention to viewpoint, contrast, repetition, sensory detail, and delayed recognition; do not preserve its syntax or sound words by default. Choose English verbs and particles for the actual effort, path, contact, and result. Control articles, pronouns, tense/aspect, contractions, and information order so the child can follow the actors and objects.
+
+Give repeated phrases a changing result, speaker, context, or emotional meaning. Read dialogue as an attempt to ask, refuse, reassure, hide, boast, or negotiate. Keep purposeful fragments and repetition when they support voice or timing. Rhyme, synonym variety, and constant exclamation are options, not quality requirements.
+
+Separate language load from emotional and narrative sophistication. Simplify an unclear reference or overloaded clause before removing the character&#x27;s motive, hesitation, or important choice. For vocabulary work, select one sense and natural phrase frame; make that meaning matter to the action.
+
+## Make the image prove the intended meaning
+
+Choose evidence for the particular event and reader experience. Mechanical actions may depend on contact and object state; relationships may depend on access, distance, gaze, and contrasting treatment; wonder may depend on scale and space. The inflatable-chair revision is a useful mechanical-action case, not a requirement to center every story on mechanisms or hand inserts. Establish what matters, then select the framing that makes it readable.
+
+Choose one drawable instant per panel. Track object count, ownership, position, condition, and continuing forces. Distinguish an immediate reaction from the character&#x27;s next decision. Build emotional contrast through the body, hands, gaze, and distance as well as the face. Give anticipation, decisive change, and its aftermath different screen functions when needed.
+
+Use an image-generation tool when actual new or revised raster art is requested. If asked to cut existing art, crop that art rather than regenerate it. A prop, emotion word, or shot label in the prompt records an intention, not proof of the result. Preserve that distinction in the production record for later requested review.
+
+## When the user requests review or revision
+
+Read the event chain, English, and image sequence separately and together. These checks are not an automatic stage of one-take delivery. At the important beats, check:
+
+- The action changes a condition that affects the next choice; the ending uses established information.
+- The reader receives the clue or risk before needing it, and the prose or surrounding page does not disclose a withheld result early.
+- Each actor, object, path, contact, and relevant emotional change is actually identifiable.
+- The English expresses the intended scope and degree: trying, almost succeeding, continuing, and completing are different states.
+- The prose adds the needed thought, connection, or voice without explaining away a visual joke or replacing missing visual evidence.
+- Framing variation has a purpose; purposeful repeated framing can reveal a changed reaction.
+- The final artifact works in its requested reading mode. Technical checks, adult judgments, and the child&#x27;s response remain separate claims.
+
+Fix failures in the meaning chain before adding decoration. Record new user feedback with the exact work, version, score if supplied, and stated reason. Treat an explanation inferred by the writer as a hypothesis. Publication uses the appropriate service workflow when requested; this skill does not create standing permission to publish later work.
+</pre>
+</details>
+<p><a href="SKILL.md">SKILL.md 원문</a></p>
+</main>
+</body>
+</html>
