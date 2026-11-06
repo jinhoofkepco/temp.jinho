@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Moon with a Line — 1차와 2차 비교</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #18302b; background: #f6f7f2; }
+* { box-sizing: border-box; }
+body { margin: 0; line-height: 1.7; overflow-wrap: anywhere; }
+main { max-width: 900px; margin: auto; padding: 70px 24px; }
+.back { color: #526b62; font-size: .9rem; }
+h1 { font-size: clamp(2rem, 6vw, 3.5rem); letter-spacing: -.05em; line-height: 1.15; margin: 28px 0 18px; }
+h2 { font-size: 1.4rem; letter-spacing: -.03em; margin: 48px 0 14px; }
+p, li { color: #344d44; }
+.intro { color: #52645e; }
+a { color: #17634d; text-underline-offset: .2em; }
+a:focus-visible { outline: 3px solid #2d8067; outline-offset: 4px; }
+ul { padding-left: 1.3em; }
+li + li { margin-top: .8em; }
+.readers { padding: 0; list-style: none; border-top: 1px solid #d7dfd6; }
+.readers li { padding: 18px 4px; margin: 0; border-bottom: 1px solid #d7dfd6; }
+.readers a { font-weight: 700; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .96rem; }
+th, td { text-align: left; vertical-align: top; padding: 12px 8px; border-bottom: 1px solid #d7dfd6; }
+th { color: #526b62; font-size: .9rem; }
+.improvements th:first-child { width: 25%; }
+.scenes th:nth-child(1), .scenes th:nth-child(2) { width: 23%; }
+code { font-size: .9em; }
+@media (max-width: 540px) { main { padding: 36px 20px 55px; } th, td { padding: 10px 5px; } table { font-size: .88rem; } }
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../../../index.html">← HTML 자료실로</a>
+<h1>The Moon with a Line<br>1차와 2차 비교</h1>
+<p class="intro">주제: 거짓말과 용기 · 대상: 8살 안팎 영어 학습자 · 그림: Codex CLI <code>gpt-6.1-terra</code>(high)</p>
+<ul class="readers">
+<li><a href="take1/index.html">1차 보기</a>: 원래 kids-storycraft 스킬로 제작. Codex가 설계와 제작을 모두 맡았고, Claude는 중간에 감독 지시를 한 번 넣었습니다.</li>
+<li><a href="take2/index.html">2차 보기</a>: 보완한 스킬로 제작. Claude가 이야기를 설계하고, Codex가 그림을 4장씩 나눠 생성했습니다.</li>
+</ul>
+<section>
+<h2>스킬에서 보완한 것</h2>
+<table class="improvements">
+<thead><tr><th scope="col">보완</th><th scope="col">내용</th></tr></thead>
+<tbody>
+<tr><td>가치 주제 설계</td><td>대가를 먼저 깔기 → 참인 사실을 빌린 거짓말 → 거짓말이 친구에게 번지기 → 대가가 살아 있을 때 고백 → 교훈 대신 흔적 남기기</td></tr>
+<tr><td>영화적 화면</td><td>스타일 문장 하나를 모든 프롬프트에 그대로 쓰기, 실제 있는 광원, 장면별 색 흐름, 포스터 장면, 처음과 끝을 같은 구도로</td></tr>
+<tr><td>프롬프트 블록</td><td>사건 / 카메라 / 상태 / 표정 / 세트와 빛 / 스타일의 짧은 6블록, 그림 생성 전 글로만 하는 점검</td></tr>
+<tr><td>연속성</td><td>소품 상태 장부(없어야 할 것도 적기), 세트 고정 문장, 참고 시트 + 직전 장면 참고</td></tr>
+<tr><td>나눠서 생성</td><td>한 번에 4장 이하로 나눠 그리고, 다음 묶음 전에 연속성 사실만 갱신</td></tr>
+<tr><td>화면 비율</td><td>휴대폰에서 읽히도록 16:9 사용, 그림을 누르면 크게 보기</td></tr>
+<tr><td>역할 분담</td><td>Claude는 이야기 설계, Codex는 제작, 검수는 사용자</td></tr>
+</tbody></table>
+</section>
+<section>
+<h2>이야기에서 달라진 것</h2>
+<ul>
+<li>1차: 고백한 뒤 미나가 그대로 달 역할을 합니다.</li>
+<li>2차: 고백하면 달 역할을 잃는다는 대가를 1장면에 깔고, 실제로 잃습니다. 마지막 장면은 1장면과 같은 구도에서 두 아이의 자리가 바뀌어 있습니다.</li>
+<li>2차는 숨기기(3), 거짓말(4), 그림자만 보이는 장면(5)을 따로 나눴습니다. 1차는 이 셋을 한 장면에 담았습니다.</li>
+</ul>
+</section>
+<section>
+<h2>장면 대응표</h2>
+<table class="scenes">
+<thead><tr><th scope="col">1차</th><th scope="col">2차</th><th scope="col">장면</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>1</td><td>달 역할, 바람</td></tr>
+<tr><td>2</td><td>2</td><td>찢어짐</td></tr>
+<tr><td>3</td><td>3 · 4 · 5</td><td>숨기기 · 거짓말 · 그림자</td></tr>
+<tr><td>4</td><td>6</td><td>밖에서 찾기</td></tr>
+<tr><td>5</td><td>7</td><td>“내 탓이야”</td></tr>
+<tr><td>6 · 7</td><td>8</td><td>조각을 꺼내고 고백</td></tr>
+<tr><td>8</td><td>9</td><td>테이프로 붙이기</td></tr>
+<tr><td>9</td><td>10</td><td>선이 그어진 달</td></tr>
+</tbody></table>
+</section>
+</main>
+</body>
+</html>
