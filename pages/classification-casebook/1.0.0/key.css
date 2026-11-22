@@ -1,0 +1,237 @@
+.motion-key {
+  --mk-ink: #21392f;
+  --mk-route: #25805e;
+  --mk-rail: #aebdb0;
+  --mk-border: #d8e2d5;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: .72rem;
+  border: 1px solid var(--mk-border);
+  border-radius: .7rem;
+  background: #fffef8;
+  color: var(--mk-ink);
+  text-align: start;
+}
+.motion-key [hidden] { display: none !important; }
+.motion-key .mk-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-bottom: .6rem;
+}
+.motion-key .mk-controls button {
+  min-height: 36px;
+  padding: .28rem .56rem;
+  border: 1px solid #899f92;
+  border-radius: .42rem;
+  background: #fffef8;
+  color: var(--mk-ink);
+  font: 650 .82rem/1.15 system-ui, sans-serif;
+  cursor: pointer;
+}
+.motion-key .mk-controls button[aria-pressed="true"],
+.motion-key .mk-controls button[data-mk-play] {
+  background: #176047;
+  color: #fff;
+  border-color: #176047;
+}
+.motion-key .mk-controls button:disabled { opacity: .48; cursor: default; }
+.motion-key .mk-controls button:focus-visible { outline: 2px solid #965629; outline-offset: 2px; }
+.motion-key .mk-map {
+  position: relative;
+  height: clamp(20rem, 63vw, 28rem);
+  overflow: hidden;
+  border-radius: .45rem;
+  background:
+    radial-gradient(ellipse at 50% 45%, #fcfdf6 28%, transparent 76%),
+    #edf2e5;
+  font: 600 clamp(.66rem, 2.55vw, .94rem)/1.26 system-ui, sans-serif;
+}
+.motion-key .mk-main-line,
+.motion-key .mk-traveled,
+.motion-key .mk-branch {
+  position: absolute;
+  display: block;
+  width: 2px;
+  translate: -50%;
+}
+.motion-key .mk-main-line,
+.motion-key .mk-traveled { top: 7%; left: 50%; height: 56%; background: var(--mk-rail); }
+.motion-key .mk-traveled { height: 0; background: var(--mk-route); width: 4px; }
+.motion-key .mk-fork-line {
+  position: absolute;
+  top: 63%;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  translate: 0 -50%;
+  background: var(--mk-rail);
+}
+.motion-key .mk-branch { background: var(--mk-rail); top: 63%; height: 17%; }
+.motion-key .mk-branch-a { left: 25%; }
+.motion-key .mk-branch-b { left: 75%; }
+.motion-key[data-mk-stage="5"][data-mk-active="a"] :is(.mk-branch-a, .mk-fork-line),
+.motion-key[data-mk-stage="5"][data-mk-active="b"] :is(.mk-branch-b, .mk-fork-line) {
+  background: var(--mk-route);
+}
+.motion-key[data-mk-stage="5"][data-mk-active="a"] .mk-fork-line { width: 25%; }
+.motion-key[data-mk-stage="5"][data-mk-active="b"] .mk-fork-line { left: 50%; width: 25%; }
+.motion-key .mk-map::before {
+  content: '';
+  position: absolute;
+  top: 63%;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  translate: 0 -50%;
+  background: var(--mk-rail);
+}
+.motion-key .mk-gate {
+  position: absolute;
+  inset: var(--mk-y) 0 auto;
+}
+.motion-key .mk-dot {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 0;
+  translate: -50% -50%;
+  width: .73rem;
+  height: .73rem;
+  box-sizing: border-box;
+  border: 2px solid #7b9785;
+  border-radius: 50%;
+  background: #fffef8;
+}
+.motion-key .mk-split {
+  display: grid;
+  place-items: center;
+  top: 63%;
+  height: 1.32rem;
+  width: 1.32rem;
+  color: #314e40;
+  font-size: .65rem;
+}
+.motion-key .mk-take,
+.motion-key .mk-other {
+  position: absolute;
+  top: 0;
+  width: 42%;
+  padding: 0 .28rem;
+  translate: 0 -50%;
+}
+.motion-key .mk-take { right: 56%; text-align: right; }
+.motion-key .mk-other { left: 64%; width: 35%; color: #55675c; }
+.motion-key .mk-other::before {
+  content: '';
+  position: absolute;
+  left: -42%;
+  top: 50%;
+  width: 41%;
+  border-top: 1px dashed #778c7e;
+}
+.motion-key .mk-visited .mk-dot,
+.motion-key .mk-visited.mk-dot,
+.motion-key .mk-arrived .mk-dot { background: var(--mk-route); border-color: #fffef8; outline: 1px solid var(--mk-route); color: #fff; }
+.motion-key .mk-visited .mk-take,
+.motion-key .mk-arrived .mk-end-label { color: #155c43; font-weight: 800; }
+.motion-key .mk-end {
+  position: absolute;
+  top: var(--mk-y);
+  left: var(--mk-x);
+  width: 47%;
+  text-align: center;
+  translate: -50%;
+}
+.motion-key .mk-end-label { display: block; margin-top: clamp(1.14rem, 4vw, 1.85rem); padding: 0 .2rem; }
+.motion-key .mk-token {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 7%;
+  translate: -50% -50%;
+  display: block;
+  width: clamp(1.9rem, 8vw, 3.05rem);
+  aspect-ratio: 1;
+  object-fit: cover;
+  box-sizing: border-box;
+  border: 2px solid #fffef8;
+  border-radius: 50%;
+  outline: 2px solid #9a4e23;
+  box-shadow: 0 2px 7px #263b3340;
+  background: #eee6cf;
+}
+.motion-key .mk-status {
+  min-height: 2.85em;
+  margin: .58rem .18rem .18rem;
+  color: #24513e;
+  font: 650 clamp(.84rem, 2.8vw, 1rem)/1.42 system-ui, sans-serif;
+}
+.motion-key .mk-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+}
+.motion-key .mk-model {
+  margin: 0;
+  padding: .4rem;
+  text-align: center;
+  border: 1px solid var(--mk-border);
+  border-radius: .45rem;
+  background: #fbfaf1;
+}
+.motion-key .mk-model.mk-chosen {
+  border-color: var(--mk-route);
+  box-shadow: inset 0 0 0 1px var(--mk-route);
+}
+.motion-key .mk-diagram {
+  position: relative;
+  width: min(100%, 10rem);
+  margin: 0 auto .28rem;
+  aspect-ratio: 1;
+}
+.motion-key .mk-model img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: .3rem;
+}
+.motion-key .mk-tail-tip,
+.motion-key .mk-tail-trace {
+  position: absolute;
+  pointer-events: none;
+  left: var(--mk-x);
+  top: var(--mk-y);
+  animation-delay: var(--mk-delay);
+}
+.motion-key .mk-tail-trace {
+  width: var(--mk-width);
+  height: 2px;
+  transform-origin: 0 50%;
+  translate: 0 -50%;
+  rotate: var(--mk-angle);
+  border-radius: 2px;
+  background: #076849;
+  box-shadow: 0 0 0 1px #fffef8;
+  animation: mk-draw-tail .12s var(--mk-delay) ease-out both;
+}
+.motion-key .mk-tail-tip {
+  translate: -50% -50%;
+  width: .66rem;
+  aspect-ratio: 1;
+  border: 2px solid #076849;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #fffef8;
+  animation: mk-show-tip .2s var(--mk-delay) ease-out both;
+}
+@keyframes mk-draw-tail { from { transform: scaleX(0); } }
+@keyframes mk-show-tip { from { opacity: 0; transform: scale(.5); } }
+@media (prefers-reduced-motion: reduce) {
+  .motion-key :is(.mk-tail-trace, .mk-tail-tip) { animation: none; }
+}
+.motion-key .mk-model figcaption {
+  color: var(--mk-ink);
+  padding: .1rem 0;
+  font: 600 clamp(.74rem, 2.7vw, .92rem)/1.3 system-ui, sans-serif;
+}
