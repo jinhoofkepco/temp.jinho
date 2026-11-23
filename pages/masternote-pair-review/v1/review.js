@@ -80,42 +80,118 @@ function shelf(mode) {
       : "")
   );
 }
-function pages(mode) {
-  const variant = mode === "variants" || mode === "ten",
-    count = mode === "ten" ? 10 : 5;
-  const nums = variant
-    ? Array.from({ length: count }, (_, i) => i + 1)
-    : [47, 48, 49, 50, 51, 52];
+const typeNames = ["일차방정식", "괄호 풀기"];
+const typePages = [
+  [1, 2, 3, 4, 5],
+  [6, 7, 8, 9, 10],
+];
+function addQuestions(type) {
+  const lastPage = typePages.reduce(
+    (last, pages) => Math.max(last, pages.at(-1)),
+    0,
+  );
+  for (let next = 1; next <= 5; next++) typePages[type].push(lastPage + next);
+}
+const firstQuestion = { type: 0, number: 1 };
+let selections = { kid: firstQuestion, dad: firstQuestion };
+let readerModes = {};
+let readerLayers = {};
+let feedbackTool = "";
+const feedback = new Map();
+
+function question(role = "dad") {
+  const { type, number } = selections[role];
+  const page = typePages[type][number - 1];
+  const a = 2 + ((number - 1) % 4);
+  const b = 3 + ((number - 1) % 3);
+  const answer = 6 + number;
+  const equation =
+    type === 0
+      ? a + "x + " + b + " = " + (a * answer + b)
+      : a + "(x + " + b + ") = " + a * (answer + b);
+  const working =
+    type === 0 ? a + "x = " + a * answer : "x + " + b + " = " + (answer + b);
+  return {
+    type,
+    number,
+    page,
+    equation,
+    working,
+    answer,
+    name: typeNames[type],
+  };
+}
+
+function groupList(kid) {
+  const rows = typeNames
+    .map((name, type) => {
+      const count = typePages[type].length;
+      const chips = Array.from({ length: count }, (_, idx) => {
+        const n = idx + 1;
+        return (
+          '<button class="number-chip" data-type="' +
+          type +
+          '" data-question="' +
+          n +
+          '" aria-label="' +
+          name +
+          " " +
+          n +
+          '번 열기">' +
+          n +
+          "</button>"
+        );
+      }).join("");
+      const add = kid
+        ? ""
+        : '<button class="batch-add" data-extend="' +
+          type +
+          '" aria-label="' +
+          name +
+          ' 5문제 추가">+5</button>';
+      return (
+        '<li class="type-row"><strong>' +
+        name +
+        '</strong><div class="number-track" aria-label="' +
+        name +
+        ' 문제 번호">' +
+        chips +
+        "</div>" +
+        add +
+        "</li>"
+      );
+    })
+    .join("");
+  return (
+    '<div class="pagespaper type-paper"><div class="book-tabs"><button data-booktab="pages">본문</button><b>추가문제</b></div><ul class="type-list">' +
+    rows +
+    "</ul></div>"
+  );
+}
+
+function pages(mode, kid) {
+  if (mode !== "pages") return groupList(kid);
+  const tiles = [47, 48, 49, 50, 51, 52]
+    .map(
+      (n) =>
+        '<div class="tile ' +
+        (n === 48 ? "selected" : "") +
+        '">' +
+        n +
+        "쪽<small>" +
+        (n === 48 ? "풀이 중" : "미시작") +
+        "</small></div>",
+    )
+    .join("");
   return (
     '<div class="pagespaper"><div class="pagesplit"><div class="mini-cover">' +
     cover(0) +
-    '</div><div class="minipages"><div class="mini-tabs">' +
-    (variant
-      ? "<span>본문 200쪽</span><b>변형 " + count + "쪽</b>"
-      : "<b>본문 200쪽</b><span>변형 5쪽</span>") +
-    "</div>" +
-    (variant
-      ? ""
-      : '<div class="gridlabel">최근 필기</div><div class="mini-tabs"><b>48쪽</b><span>36쪽</span></div>') +
-    '<div class="gridlabel">' +
-    (variant ? "변형문제" : "전체 쪽") +
-    '</div><div class="pgrid">' +
-    nums
-      .map(
-        (n) =>
-          '<div class="tile ' +
-          ((variant ? n === 1 : n === 48) ? "selected" : "") +
-          '">' +
-          (variant ? "변형 " : "") +
-          n +
-          "쪽<small>" +
-          ((variant ? n === 1 : n === 48) ? "풀이 중" : "미시작") +
-          "</small></div>",
-      )
-      .join("") +
+    '</div><div class="minipages"><div class="book-tabs"><b>본문</b><button data-booktab="variants">추가문제</button></div><div class="gridlabel">최근 필기</div><div class="mini-tabs"><b>48쪽</b><span>36쪽</span></div><div class="gridlabel">전체 쪽</div><div class="pgrid">' +
+    tiles +
     "</div></div></div></div>"
   );
 }
+
 function opt(t, style = "") {
   return '<div class="app-opt ' + style + '">' + t + "</div>";
 }
@@ -192,7 +268,7 @@ const panels = {
       "선택한 문제",
       "캡처로 할 일",
       "중1 상 · 본문 48쪽",
-      opt("변형퀴즈 5문제 만들기", "on") + opt("문제 만들고 인쇄"),
+      control("generate", "같은 유형 5문제 만들기", "같은 유형 추가문제 생성"),
     ),
   generating: () =>
     panel(
@@ -202,14 +278,7 @@ const panels = {
       "일차방정식 · 계산 조건과 숫자를 검산합니다.",
       '<div class="imageline"></div>',
     ),
-  types: () =>
-    panel(
-      "",
-      "풀어본 유형",
-      "일차방정식 풀기",
-      "5문제 준비 · 중1 상",
-      opt("원래 문제집에서 열기", "on"),
-    ),
+
   goal: () =>
     panel(
       "",
@@ -227,38 +296,7 @@ const panels = {
       "",
       "2분",
     ),
-  more: () =>
-    panel(
-      "",
-      "풀어본 유형",
-      "일차방정식 풀기",
-      "맞힌 문제 2 / 5",
-      opt("다음 5문제 만들기", "on"),
-    ),
-  print: () =>
-    panel(
-      "",
-      "인쇄 요청",
-      "문제 만들고 인쇄",
-      "캡처한 문제에서 숫자만 새로 바꿔서 문제를 만들고 바로 인쇄해줘.",
-      opt("새로 받아쓰기") + opt("문제 만들고 인쇄", "on"),
-    ),
-  dictate: () =>
-    panel(
-      "",
-      "인쇄 요청",
-      "새로 받아쓰기",
-      "“숫자를 바꿔 두 문제 만들어줘.”",
-      opt("요청 확인", "on"),
-    ),
-  printed: () =>
-    panel(
-      "",
-      "Mac 인쇄",
-      "인쇄 요청을 보냈어요",
-      "Epson L805 · 문제지",
-      opt("요청 내용 보기"),
-    ),
+
   key: () =>
     panel(
       "",
@@ -331,19 +369,197 @@ const quizSet = new Set([
   "wrongDad",
   "retry",
 ]);
-function toolsRow(kid, isQuiz) {
+function control(action, label, title, extra = "") {
   return (
-    '<div class="sim-tools">' +
-    (kid
-      ? '<span class="tool-on">펜</span><span>자</span><span>컴퍼스</span><span class="right ' +
-        (isQuiz ? "tool-submit" : "") +
-        '">' +
-        (isQuiz ? "제출" : "메모") +
-        "</span>"
-      : '<span class="tool-on">실시간</span><span>채점</span><span class="right">답</span>') +
-    "</div>"
+    '<button class="reader-action ' +
+    extra +
+    '" data-reader="' +
+    action +
+    '" aria-label="' +
+    title +
+    '" title="' +
+    title +
+    '">' +
+    label +
+    "</button>"
   );
 }
+function strip(mode, kid, link) {
+  const q = quizSet.has(mode);
+  const home = control("library", "▤", "교재 페이지로 돌아가기");
+  const live =
+    '<span class="transport-dot ' +
+    (link === "오프라인"
+      ? "is-offline"
+      : link === "수신 대기"
+        ? "is-pending"
+        : "") +
+    '" title="' +
+    link +
+    '" aria-label="' +
+    link +
+    '"></span>';
+  const attempt = mode === "retry" ? "2회" : "1회";
+  const history = '<span class="attempt-label">' + attempt + "</span>";
+  const actions = kid
+    ? history +
+      control("construction", "작도", "페이지 작도 메모 열기") +
+      control("submit", "제출", "현재 페이지 제출", "filled")
+    : control(
+        q ? "print" : "capture",
+        "인쇄",
+        q ? "현재 문제 인쇄" : "문제 캡처 후 인쇄 요청",
+        q ? "print-action" : "",
+      ) +
+      control("key", "답", "현재 문제 정답 보기") +
+      control("grade", "채점", "정오답·첨삭 도구") +
+      control("publish", "발행", "첨삭 발행", "filled");
+  return (
+    '<nav class="reader-strip" aria-label="풀이 상단 메뉴">' +
+    home +
+    live +
+    actions +
+    control("more", "⋯", "풀이 메뉴 더 보기") +
+    "</nav>"
+  );
+}
+function pageKey(mode, role) {
+  if (quizSet.has(mode))
+    return "extra-" + question(role).page + "-" + (mode === "retry" ? 2 : 1);
+  return (
+    (geoSet.has(mode) ? "lower-" : "upper-") +
+    (mode === "browse" ? 47 : 48) +
+    "-1"
+  );
+}
+function responseFor(mode, role) {
+  const key = pageKey(mode, role);
+  if (!feedback.has(key)) feedback.set(key, { pending: [], sent: [] });
+  return feedback.get(key);
+}
+function gradeLayer() {
+  return panel(
+    "",
+    "채점 · 현재 회차",
+    "풀이 위에 표시",
+    "",
+    "<div class='grade-palette'>" +
+      control("mark-o", "○ 정답", "정답 표시 선택") +
+      control("mark-x", "× 오답", "오답 표시 선택") +
+      control("mark-pen", "첨삭 펜", "첨삭 필기 선택") +
+      "</div>" +
+      control("close", "돌아가기", "풀이로 돌아가기"),
+  );
+}
+function printView(sent) {
+  const q = question();
+  return (
+    '<div class="print-view"><div class="print-heading"><span>Epson L805</span><b>' +
+    (sent ? "인쇄 요청 완료" : "인쇄 미리보기") +
+    '</b></div><div class="print-page"><small>황소 프라임 중1 상 · 추가 ' +
+    q.page +
+    "쪽</small><strong>" +
+    q.name +
+    " · " +
+    q.number +
+    "번</strong><p>x의 값을 구하세요.</p><em>" +
+    q.equation +
+    '</em></div><div class="print-controls">' +
+    control("close", "닫기", "인쇄 화면 닫기") +
+    (sent
+      ? "<b>1장 요청됨</b>"
+      : control("send-print", "1장 인쇄", "이 문제 한 장 인쇄", "filled")) +
+    "</div></div>"
+  );
+}
+function readerLayer(layer, mode, kid) {
+  if (layer === "proof" || layer === "sent") return printView(layer === "sent");
+  if (layer === "grade") return gradeLayer();
+  const back = control("close", "닫기", "풀이로 돌아가기");
+  if (layer === "key") {
+    const q = question();
+    const body = quizSet.has(mode)
+      ? [q.equation, q.working + "　→　x = " + q.answer]
+      : geoSet.has(mode)
+        ? ["수직이등분선 작도", "AB의 중점을 지나 AB와 수직인 직선"]
+        : ["3x + 4 = 19", "3x = 15　→　x = 5"];
+    return panel(
+      "",
+      "선생님 · 답",
+      "정답과 풀이",
+      body[0],
+      opt(body[1], "blue") + back,
+    );
+  }
+  if (layer === "more")
+    return panel(
+      "",
+      "풀이 메뉴",
+      "현재 페이지",
+      "",
+      '<div class="overflow-actions">' +
+        (kid
+          ? control("status", "전송 상태", "전송 상태 보기")
+          : control("construction", "작도", "작도 메모 열기") +
+            control("gpt", "GPT", "GPT 페이지 설명") +
+            control("status", "전송 상태", "전송 상태 보기")) +
+        "</div>" +
+        back,
+    );
+  if (layer === "capture")
+    return panel(
+      "",
+      "본문 · 캡처",
+      "문제 영역 선택",
+      "원문의 식과 그림을 함께 고릅니다.",
+      control("generate", "추가문제 만들기", "추가문제 생성 보기") +
+        control("paper-request", "문제 만들고 인쇄", "캡처 인쇄 요청 보기") +
+        back,
+    );
+  if (layer === "paper-request" || layer === "dictate")
+    return panel(
+      "",
+      "Mac 인쇄 요청",
+      "문제 만들고 인쇄",
+      "<textarea class='capture-prompt' aria-label='인쇄 요청 문구'>" +
+        (layer === "dictate"
+          ? ""
+          : "숫자만 바꿔서 문제 만들고 바로 인쇄해줘.") +
+        "</textarea>",
+      control("dictate", "새로 받아쓰기", "새 요청 문구 예시") +
+        control("paper-sent", "요청 보내기", "예시 캡처 인쇄 요청 보내기") +
+        back,
+    );
+  if (layer === "paper-sent")
+    return panel(
+      "",
+      "Mac 인쇄",
+      "요청을 보냈어요",
+      "Epson L805 · 문제지",
+      back,
+    );
+  if (layer === "submitted") {
+    const label = quizSet.has(mode)
+      ? question("kid").name + " · " + question("kid").number + "번"
+      : "본문 " + (mode === "browse" ? 47 : 48) + "쪽";
+    return panel(
+      "",
+      label,
+      "제출 완료",
+      quizSet.has(mode)
+        ? "풀이 시간과 답을 확인합니다."
+        : "현재 회차의 풀이를 제출했습니다.",
+      back,
+    );
+  }
+  const details = {
+    construction: ["작도 메모", "이 페이지의 작도 공간"],
+    status: ["전송 상태", mode === "geoTel" ? "Telegram" : "현재 문제집 연결"],
+    gpt: ["GPT 페이지 설명", "현재 페이지의 문제 설명"],
+  };
+  return panel("", "현재 페이지", ...details[layer], back);
+}
+
 function paper(mode, kid) {
   const geo = geoSet.has(mode),
     q = quizSet.has(mode),
@@ -371,16 +587,17 @@ function paper(mode, kid) {
     : mode === "answerCrop"
       ? "답안 예시"
       : q
-        ? "일차방정식 풀기"
+        ? question(kid ? "kid" : "dad").name
         : "식의 값 구하기";
-  const penMode =
-    (current.id === "write" && geo) || (current.id === "quiz-write" && q);
+  const penMode = !["submitted", "answerCrop", "selection"].includes(mode);
   const coord = geo ? "360,150" : "360,140";
   const canvas =
     '<div class="plot-space"><div class="plot-content ' +
     (geo ? "geometry" : "algebra") +
     '"><canvas class="exercise' +
-    (penMode && kid ? " writable" : "") +
+    ((penMode && kid) || (!kid && feedbackTool) ? " writable" : "") +
+    '" data-role="' +
+    (kid ? "kid" : "dad") +
     '" data-ink="' +
     (penMode ? "yes" : "no") +
     '" data-mode="' +
@@ -396,9 +613,15 @@ function paper(mode, kid) {
     '<div class="sheetpaper"><div class="folio"><b>' +
     (geo ? "중1 하" : "중1 상") +
     "</b><span>" +
-    (q ? "변형 1쪽" : "본문 " + (browsing ? "47" : "48") + "쪽") +
+    (q
+      ? "추가 " + question(kid ? "kid" : "dad").page + "쪽"
+      : "본문 " + (browsing ? "47" : "48") + "쪽") +
     '</span></div><div class="qnumber">' +
-    (geo ? "개념탐구 " + (browsing ? "3" : "4") : q ? "01" : "예제 2") +
+    (geo
+      ? "개념탐구 " + (browsing ? "3" : "4")
+      : q
+        ? String(question(kid ? "kid" : "dad").number).padStart(2, "0")
+        : "예제 2") +
     '</div><div class="problem">' +
     heading +
     "</div>" +
@@ -407,11 +630,22 @@ function paper(mode, kid) {
       ? '<div class="selection"></div>'
       : "") +
     "</div>" +
-    (note[mode] ? bar(...note[mode]) : "") +
-    toolsRow(kid, q && !review)
+    (!kid && feedbackTool
+      ? bar(
+          feedbackTool === "pen"
+            ? "첨삭한 뒤 발행"
+            : "표시할 위치를 누른 뒤 발행",
+          "check",
+        )
+      : !kid && responseFor(mode, "dad").submitted
+        ? bar("1회차 제출됨", "check")
+        : note[mode]
+          ? bar(...note[mode])
+          : "")
   );
 }
 function view(mode, role) {
+  mode = readerModes[role] || mode;
   const kid = role === "kid",
     isShelf = mode.startsWith("shelf"),
     pg = ["pages", "variants", "ten"].includes(mode);
@@ -445,23 +679,37 @@ function view(mode, role) {
           ? "학생"
           : "선생님"
         : link;
+  const fixedPrint = ["proof", "sent"].includes(mode);
+  const source = fixedPrint ? "written" : mode;
+  const layer = readerLayers[role] || (fixedPrint ? mode : "");
+  const reader = !isShelf && !pg && !panels[mode];
+  const header = reader
+    ? strip(source, kid, link)
+    : '<div class="device-head"><span class="backmark">‹</span><b>' +
+      h +
+      '</b><span class="device-state">' +
+      top +
+      "</span></div>";
+  const body = layer
+    ? readerLayer(layer, source, kid)
+    : isShelf
+      ? shelf(mode)
+      : pg
+        ? pages(mode, kid)
+        : panels[mode]
+          ? panels[mode]()
+          : paper(mode, kid);
   return (
     '<div class="device ' +
     (kid ? "tab" : "phone") +
-    '"><div class="device-head"><span class="backmark" aria-hidden="true">‹</span><b>' +
-    h +
-    '</b><span class="device-state ' +
-    (link === "오프라인" ? "bad" : "") +
+    '" data-role="' +
+    role +
+    '" data-mode="' +
+    source +
     '">' +
-    top +
-    '</span></div><div class="device-body">' +
-    (isShelf
-      ? shelf(mode)
-      : pg
-        ? pages(mode)
-        : panels[mode]
-          ? panels[mode]()
-          : paper(mode, kid)) +
+    header +
+    '<div class="device-body">' +
+    body +
     '</div><div class="screen-foot"></div></div>'
   );
 }
@@ -477,6 +725,7 @@ function plot(canvas) {
   const mode = canvas.dataset.mode,
     geo = geoSet.has(mode),
     quiz = quizSet.has(mode);
+  const role = canvas.dataset.role;
   function line(x, y, X, Y, color = "#556053", width = 1.7) {
     c.beginPath();
     c.strokeStyle = color;
@@ -539,7 +788,11 @@ function plot(canvas) {
     }
   } else {
     const t =
-      mode === "answerCrop" ? "3x = 15" : quiz ? "2x + 3 = 17" : "3x + 4 = 19";
+      mode === "answerCrop"
+        ? "3x = 15"
+        : quiz
+          ? question(role).equation
+          : "3x + 4 = 19";
     txt(t, 15, 37, 31, "#2b352e", "italic");
     if (
       [
@@ -554,8 +807,12 @@ function plot(canvas) {
       ].includes(mode)
     ) {
       const wrong = mode === "wrong" || mode === "wrongDad",
-        first = quiz ? (wrong ? "2x = 20" : "2x = 14") : "3x = 15",
-        ans = quiz ? (wrong ? "x = 10" : "x = 7") : "x = 5";
+        first = quiz ? (wrong ? "2x = 20" : question(role).working) : "3x = 15",
+        ans = quiz
+          ? wrong
+            ? "x = 10"
+            : "x = " + question(role).answer
+          : "x = 5";
       c.save();
       c.translate(40, 0);
       c.rotate(-0.035);
@@ -577,7 +834,7 @@ function plot(canvas) {
     }
   }
   if (canvas.dataset.ink === "yes") {
-    for (const stroke of points[current.id] || []) {
+    for (const stroke of points[pageKey(mode, role)] || []) {
       c.beginPath();
       c.lineWidth = 2.6;
       c.strokeStyle = "#334e91";
@@ -587,6 +844,30 @@ function plot(canvas) {
       if (stroke.length === 1) {
         c.arc(stroke[0][0] * w, stroke[0][1] * h, 1, 0, Math.PI * 2);
       }
+      c.stroke();
+    }
+  }
+  const marks = responseFor(mode, role);
+  const visible =
+    role === "dad" ? marks.sent.concat(marks.pending) : marks.sent;
+  for (const mark of visible) {
+    const [x, y] = mark.points[0];
+    if (mark.tool === "o") {
+      c.beginPath();
+      c.strokeStyle = "#b33f3a";
+      c.lineWidth = 3;
+      c.ellipse(x * w, y * h, 17, 14, -0.12, 0, 2 * Math.PI);
+      c.stroke();
+    } else if (mark.tool === "x") {
+      line(x * w - 11, y * h - 11, x * w + 11, y * h + 11, "#b33f3a", 3);
+      line(x * w + 11, y * h - 11, x * w - 11, y * h + 11, "#b33f3a", 3);
+    } else {
+      c.beginPath();
+      c.strokeStyle = "#b33f3a";
+      c.lineWidth = 3;
+      c.moveTo(x * w, y * h);
+      for (const [px, py] of mark.points) c.lineTo(px * w, py * h);
+      if (mark.points.length === 1) c.lineTo(x * w + 0.5, y * h + 0.5);
       c.stroke();
     }
   }
@@ -603,19 +884,31 @@ function canvases(root = document) {
         Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)),
       ];
     };
+    const teacher = el.dataset.role === "dad";
     const redraw = () =>
-      document.querySelectorAll('canvas[data-ink="yes"]').forEach(plot);
+      document.querySelectorAll("canvas.exercise").forEach(plot);
     el.onpointerdown = (e) => {
       if (!e.isPrimary || e.button !== 0) return;
       e.preventDefault();
       el.setPointerCapture(e.pointerId);
       stroke = [point(e)];
-      (points[current.id] ??= []).push(stroke);
-      if ($("eraseInk")) $("eraseInk").disabled = false;
+      if (teacher)
+        responseFor(el.dataset.mode, "dad").pending.push({
+          tool: feedbackTool,
+          points: stroke,
+        });
+      else {
+        (points[pageKey(el.dataset.mode, "kid")] ??= []).push(stroke);
+        if ($("eraseInk")) $("eraseInk").disabled = false;
+      }
       redraw();
     };
     el.onpointermove = (e) => {
-      if (stroke && el.hasPointerCapture(e.pointerId)) {
+      if (
+        stroke &&
+        el.hasPointerCapture(e.pointerId) &&
+        (!teacher || feedbackTool === "pen")
+      ) {
         stroke.push(point(e));
         redraw();
       }
@@ -705,7 +998,103 @@ function refreshNotes() {
   $("sceneNotes").innerHTML = arr.map((n) => row(n)).join("");
   $("railNav").innerHTML = menu();
 }
+function repaintReaders() {
+  const state = current.states[step];
+  $("kidStage").innerHTML = view(state[1], "kid");
+  $("dadStage").innerHTML = view(state[2], "dad");
+  canvases();
+  if (modal === "zoom" && zoomRole) zoom(zoomRole);
+}
+
+function clearReaderMenus() {
+  readerLayers = {};
+  readerModes = {};
+  feedbackTool = "";
+}
+
+function readerClick(button) {
+  const device = button.closest(".device");
+  if (!device) return false;
+  const role = device.dataset.role;
+  const mode = device.dataset.mode;
+  const kid = role === "kid";
+  const a = button.dataset.reader;
+  if (button.dataset.question) {
+    const selected = {
+      type: Number(button.dataset.type),
+      number: Number(button.dataset.question),
+    };
+    selections[role] = selected;
+    readerModes[role] = "quiz";
+    if (kid) {
+      selections.dad = selected;
+      readerModes.dad = "quiz";
+      delete readerLayers.dad;
+    }
+    delete readerLayers[role];
+    feedbackTool = "";
+  } else if (button.dataset.extend !== undefined) {
+    const type = Number(button.dataset.extend);
+    if (kid) return true;
+    addQuestions(type);
+    notify(typeNames[type] + "에 5문제를 추가했어요");
+  } else if (button.dataset.booktab) {
+    readerModes[role] = button.dataset.booktab;
+    delete readerLayers[role];
+  } else if (!a) return false;
+  else if (a === "library") {
+    readerModes[role] = quizSet.has(mode) ? "variants" : "pages";
+    delete readerLayers[role];
+  } else if (a === "mark-o" || a === "mark-x" || a === "mark-pen") {
+    feedbackTool = a.slice(5);
+    delete readerLayers.dad;
+  } else if (a === "publish") {
+    const group = responseFor(mode, role);
+    if (!group.pending.length) {
+      readerLayers.dad = "grade";
+      notify("먼저 풀이에 표시해 주세요");
+    } else {
+      group.sent.push(...group.pending);
+      group.pending = [];
+      feedbackTool = "";
+      delete readerLayers.dad;
+      notify("이 쪽의 첨삭을 발행했어요");
+    }
+  } else if (a === "close") {
+    if (current.id === "print" && step !== 0) {
+      setStep(0);
+      if (modal === "zoom") zoom(zoomRole);
+      return true;
+    }
+    delete readerLayers[role];
+    if (["proof", "sent"].includes(current.states[step][2]))
+      readerModes[role] = "written";
+  } else if (a === "print" || a === "send-print") {
+    if (current.id === "print") {
+      setStep(a === "print" ? 1 : 2);
+      if (modal === "zoom") zoom(zoomRole);
+      return true;
+    }
+    readerLayers.dad = a === "print" ? "proof" : "sent";
+  } else if (a === "generate") {
+    go("generate");
+    return true;
+  } else if (a === "submit") {
+    responseFor(mode, "kid").submitted = true;
+    if (current.id === "submit") {
+      setStep(1);
+      if (modal === "zoom") zoom(zoomRole);
+      return true;
+    }
+    readerLayers.kid = "submitted";
+  } else readerLayers[role] = a;
+  repaintReaders();
+  return true;
+}
+
 function paint() {
+  if (current.states[step].includes("ten") && typePages[0].length < 10)
+    addQuestions(0);
   $("title").textContent = current.title;
   $("intro").textContent = current.intro;
   $("groupName").textContent = groupsById.get(current.group).title;
@@ -734,7 +1123,9 @@ function paint() {
       : "") +
     (["write", "quiz-write"].includes(current.id)
       ? '<button id="eraseInk" ' +
-        (points[current.id]?.length ? "" : "disabled") +
+        (points[pageKey(readerModes.kid || state[1], "kid")]?.length
+          ? ""
+          : "disabled") +
         ' aria-label="내가 그린 예시 획 지우기">내 선 지우기</button>'
       : "");
   $("prev").disabled = appOrder.get(current.id) === 1;
@@ -749,6 +1140,9 @@ function gotoScene(id, which, scroll = true) {
     scenes.find((x) => x.id === id) || scenes.find((x) => x.id === "switch");
   const idx = Number.isInteger(which) && s.states[which] ? which : s.initial;
   if (current) saveDraft();
+  clearReaderMenus();
+  if (!["types", "generate", "variant-pages", "print"].includes(s.id))
+    selections = { kid: firstQuestion, dad: firstQuestion };
   current = s;
   step = idx;
   scope = "공통";
@@ -770,6 +1164,7 @@ function go(id) {
 function setStep(i) {
   if (!current.states[i]) return;
   saveDraft();
+  clearReaderMenus();
   step = i;
   history.replaceState(null, "", "#" + current.id + "/" + i);
   paint();
@@ -947,6 +1342,7 @@ function deleteNote(id) {
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("button");
   if (!b) return;
+  if (readerClick(b)) return;
   if (b.dataset.scene) {
     go(b.dataset.scene);
     return;
@@ -1032,7 +1428,7 @@ document.addEventListener("click", async (e) => {
       break;
     }
     case "eraseInk":
-      points[current.id] = [];
+      points[pageKey(readerModes.kid || current.states[step][1], "kid")] = [];
       document.querySelectorAll('canvas[data-ink="yes"]').forEach(plot);
       b.disabled = true;
       break;
