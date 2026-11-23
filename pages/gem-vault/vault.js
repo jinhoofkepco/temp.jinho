@@ -71,7 +71,7 @@ function draw(now){
 function hud(){
  $('gem').setAttribute('aria-expanded',String(opened||popup==='gem'));
  const s=current(),gems=earning?s.gems-1:s.gems,chestReady=!earning&&ready();
- $('gem').classList.toggle('available',chestReady);$('hudArt').src='assets/'+(chestReady?'chest':'gem')+'.png';
+ $('gem').classList.toggle('available',chestReady);$('hudArt').src='assets/'+(chestReady?'emerald-chest':'emerald')+'.webp';
  $('gemText').textContent=opened?'상자 접기':activeRoll()?'이어서':chestReady?'상자 열기':gems+'/5';
  $('gem').setAttribute('aria-label',opened?'보석상자 접기':chestReady?'보석상자 열기':'모은 보석 '+gems+'개, 다섯 개 필요');
  $('balance').textContent=won(balance());$('wallet').setAttribute('aria-label','통장 잔액 '+won(balance())+' 내역 열기');
@@ -110,7 +110,7 @@ function earn(source){
  const s=current();s.gems++;save();
  const at=center(source===$('simulate')?$('study'):source),target=center($('hudArt'));
  const sprite=document.createElement('span');sprite.className='flyingGem';sprite.ariaHidden='true';
- const art=document.createElement('img');art.src='assets/gem.png';art.alt='';
+ const art=document.createElement('img');art.src='assets/emerald.webp';art.alt='';
  sprite.append(art,'+1');document.body.append(sprite);
  sprite.style.left=(at.x-sprite.offsetWidth/2)+'px';sprite.style.top=(at.y-18)+'px';
  const dx=target.x-at.x,dy=target.y-at.y;
@@ -185,7 +185,7 @@ function paintChest(){
  layer.classList.toggle('charging',charging);
  layer.classList.remove('finalBeat');
  chest.disabled=activeRoll();
- $('chestArt').src='assets/'+(activeRoll()?'open':'chest')+'.png';
+ $('chestArt').src='assets/'+(activeRoll()?'emerald-chest-open':'emerald-chest')+'.webp';
 }
 function openReward(){
  if(opened||earning||!ready())return;
