@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#f6f6f1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>마스터노트 · 두 화면 비교</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./review.css" />
+  </head>
+  <body>
+    <header class="mast">
+      <div class="mast-in">
+        <a
+          class="brand"
+          href="#switch"
+          aria-label="마스터노트 화면 비교 처음으로"
+          ><i class="brand-art" aria-hidden="true"></i><b>MasterNote</b></a
+        ><span class="mast-rule"></span><span class="mast-name">화면 리뷰</span
+        ><button class="notes-open" id="allNotes">
+          <i class="bubble-icon" aria-hidden="true"></i> 내 코멘트
+          <b id="noteCount">0</b>
+        </button>
+      </div>
+    </header>
+    <div class="workspace">
+      <aside class="rail">
+        <div class="rail-heading">
+          <strong>행동 목록</strong><span id="totalScenes"></span>
+        </div>
+        <nav id="railNav" aria-label="행동별 목업"></nav>
+      </aside>
+      <main>
+        <div class="scene-path">
+          <button id="catalogBtn" aria-haspopup="dialog">
+            행동 목록 <span>⌄</span></button
+          ><span class="section-name" id="groupName"></span
+          ><span class="scene-count" id="sceneCount"></span>
+        </div>
+        <div class="scene-heading">
+          <h1 id="title"></h1>
+          <p id="intro"></p>
+        </div>
+        <section class="compare" aria-label="서아와 아빠 화면 비교">
+          <article class="pane kid">
+            <header class="persona">
+              <i class="dot"></i>
+              <h2>서아 화면</h2>
+              <span>Tab S11</span
+              ><button class="zoom" data-zoom="kid" aria-label="서아 화면 확대">
+                ⛶
+              </button>
+            </header>
+            <div class="stage" id="kidStage"></div>
+            <p class="role-caption" id="kidCaption"></p>
+          </article>
+          <article class="pane dad">
+            <header class="persona">
+              <i class="dot"></i>
+              <h2>아빠 화면</h2>
+              <span>S23 Ultra</span
+              ><button class="zoom" data-zoom="dad" aria-label="아빠 화면 확대">
+                ⛶
+              </button>
+            </header>
+            <div class="stage" id="dadStage"></div>
+            <p class="role-caption" id="dadCaption"></p>
+          </article>
+        </section>
+        <div class="simulation">
+          <div id="toggles" role="group" aria-label="장면 상태"></div>
+          <span class="mocktag">예시 화면</span>
+        </div>
+        <section class="comment-card" aria-label="이 행동에 코멘트">
+          <div class="comment-heading">
+            <h2>이 행동에 코멘트</h2>
+            <span id="savedCount"></span>
+          </div>
+          <div class="compose-row">
+            <div
+              class="scope"
+              id="scope"
+              role="group"
+              aria-label="의견을 남길 화면"
+            >
+              <button data-for="공통" aria-pressed="true">공통</button
+              ><button data-for="서아">서아</button
+              ><button data-for="아빠">아빠</button>
+            </div>
+            <label class="sr" for="note">이 장면에 남길 의견</label>
+          </div>
+          <div class="note-row">
+            <textarea
+              id="note"
+              placeholder="어느 부분을 바꾸면 좋을까요?"
+              rows="2"
+              maxlength="1600"
+            ></textarea
+            ><button class="primary" id="save">의견 저장</button>
+          </div>
+          <p class="save-info" id="saveInfo">이 브라우저에 저장됩니다.</p>
+          <div id="sceneNotes"></div>
+        </section>
+        <nav class="stepnav" aria-label="이전 또는 다음 행동">
+          <button id="prev"><span aria-hidden="true">‹</span> 이전 행동</button
+          ><button id="next">
+            다음 행동 <span aria-hidden="true">›</span>
+          </button>
+        </nav>
+      </main>
+    </div>
+    <dialog id="sheet">
+      <div class="sheethead">
+        <h2 id="sheetTitle"></h2>
+        <button id="close" aria-label="닫기">×</button>
+      </div>
+      <div id="sheetBody"></div>
+    </dialog>
+    <div id="liveMsg" role="status" class="toast" aria-live="polite"></div>
+    <script src="./scenes.js"></script>
+    <script src="./review.js"></script>
+  </body>
+</html>
