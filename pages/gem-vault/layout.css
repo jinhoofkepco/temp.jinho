@@ -5,14 +5,14 @@
 #previewFrame{container-type:inline-size;max-width:100%;margin-inline:auto;--bar-height:48px}
 .screen{--bar:var(--bar-height)}
 .studybar{
- height:var(--bar);display:grid;grid-template-columns:clamp(94px,16cqw,165px) auto auto minmax(0,1fr) auto auto auto;
+ height:var(--bar);display:grid;grid-template-columns:clamp(94px,16cqw,165px) auto minmax(0,1fr) auto auto auto auto;
  align-items:center;gap:6px;padding:0 10px;white-space:nowrap;
 }
 .studybar>*{min-width:0}
 #list{display:flex;align-items:center;gap:5px;overflow:hidden}
 #listLabel,#lessonTitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #lessonTitle{display:block;font-size:13px}
-#gem,#wallet{display:inline-flex;align-items:center;justify-content:center;margin:0;white-space:nowrap}
+#wallet{display:inline-flex;align-items:center;justify-content:center;margin:0;white-space:nowrap}
 #gem{min-width:74px}
 #menu{margin:0;width:36px}
 #quickTools{display:flex;gap:4px}
@@ -33,12 +33,12 @@
 .toast{top:calc(var(--bar) + 6px);max-width:95%;white-space:normal}
 @container(max-width:850px){.tool{font-size:12px;padding-inline:5px}}
 @container(max-width:720px){
- .studybar{grid-template-columns:clamp(70px,16cqw,104px) auto auto minmax(0,1fr) auto auto auto;gap:4px;padding-inline:6px}
+ .studybar{grid-template-columns:clamp(70px,16cqw,104px) auto minmax(0,1fr) auto auto auto auto;gap:4px;padding-inline:6px}
  #quickTools .tool:nth-child(n+3){display:none}
 }
 @container(max-width:600px){
  .screen{--bar:42px}
- .studybar{grid-template-columns:clamp(52px,16cqw,82px) auto auto minmax(0,1fr) auto auto auto;padding-inline:4px;gap:3px}
+ .studybar{grid-template-columns:clamp(52px,16cqw,82px) auto minmax(0,1fr) auto auto auto auto;padding-inline:4px;gap:3px}
  .studybar button{min-height:31px;padding:2px 5px}
  #quickTools .tool{display:none}
  #list{gap:2px}#list span{font-size:14px}#listLabel{font-size:12px}
@@ -49,9 +49,10 @@
 }
 @media(max-width:650px){.previewControls{gap:5px 9px;margin-bottom:8px;font-size:11px}.previewControls select{padding:3px 4px}#sizeReadout{font-size:10px}}
 #listLabel .listDetail{font-style:normal}
-#wallet{width:142px;font-variant-numeric:tabular-nums}
-@container(max-width:850px){#wallet{width:134px}}
-@container(max-width:600px){#wallet{width:106px}#listLabel .listDetail{display:none}}
+#wallet{width:auto;padding-inline:7px;gap:4px;font-variant-numeric:tabular-nums}
+#wallet b{font:650 13px/1.2 system-ui,sans-serif}
+
+@container(max-width:600px){#wallet{padding-inline:4px}#listLabel .listDetail{display:none}}
 @container(max-width:370px){#lessonTitle{visibility:hidden}}
 .study{container-type:size}
 #capture{position:relative;margin-inline:auto;width:min(100%,calc(100cqh * var(--shot-ratio,1.9)));aspect-ratio:var(--shot-ratio,1.9)}
@@ -59,8 +60,8 @@
 #rest[aria-expanded=true],#menu[aria-expanded=true]{outline:2px solid #527966;outline-offset:-2px}
 @container(max-width:600px){#rest{padding-inline:5px;font-size:12px}}
 @container(max-width:385px){
- .studybar{grid-template-columns:minmax(48px,1fr) 98px 48px 56px 31px;gap:3px}
- #lessonTitle,#quickTools{display:none}#wallet{width:98px}
+ .studybar{grid-template-columns:minmax(48px,1fr) auto auto auto 31px;gap:3px}
+ #lessonTitle,#quickTools{display:none}
  #gem.available strong{display:none}
 }
 #popover[data-panel=menu]{width:min(354px,calc(100% - 10px));padding:12px;background:#fffef9}
@@ -94,3 +95,23 @@
  .viewStrip .rateLine select{max-width:62px}
 }
 #popover[data-panel=menu]{background:linear-gradient(#fffffff7,#edf2eff4);backdrop-filter:blur(12px);box-shadow:inset 0 1px #fff,0 7px 24px #233f3430}
+#rest{display:flex;align-items:center;gap:4px;padding:2px 7px;text-align:left}
+#rest img{width:22px;height:22px;object-fit:contain}
+#rest span{display:grid;line-height:1.05}
+#rest small{font:500 10px/1.1 system-ui,sans-serif}#restBalance{font:700 13px/1.15 system-ui,sans-serif;font-variant-numeric:tabular-nums}
+#listen{margin:0;white-space:nowrap}
+@container(max-width:600px){#rest{gap:3px;padding-inline:4px}#rest img{width:17px;height:17px}#restBalance,#wallet b,#listen{font-size:12px}}
+#gem.gemTray{position:absolute;z-index:2;top:calc(var(--bar) + 4px);left:10px;display:inline-flex;align-items:center;min-width:0;min-height:0;padding:0;margin:0;border:0;border-radius:0;box-shadow:none;background:transparent;animation:none;pointer-events:none}
+#gem.claim{pointer-events:auto;cursor:pointer}
+#sockets{display:inline-flex;gap:3px;align-items:center;height:19px}
+#sockets i{position:relative;display:block;width:18px;height:15px}
+#sockets i::before{content:"";position:absolute;inset:0;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Cpath d='M5 2h14l4 5-11 10L1 7zM1 7h22M5 2l3 5 4 10 4-10 3-5' fill='none' stroke='%23234243' stroke-opacity='.31' stroke-width='1.15'/%3E%3C/svg%3E");filter:drop-shadow(0 1px 0 #ffffff80)}
+#sockets i.filled::before{background-image:var(--stone);filter:drop-shadow(0 1px 1px #1e423756)}
+#sockets.fracture i::before{opacity:0}
+#gem #bankedChest{width:30px;height:26px;object-fit:contain}
+.shard{position:absolute;inset:0;background:var(--stone) center/contain no-repeat;pointer-events:none}
+.shard.part0{clip-path:polygon(0 0,49% 0,36% 56%,54% 100%,0 100%)}
+.shard.part1{clip-path:polygon(49% 0,78% 0,65% 58%,54% 100%,36% 56%)}
+.shard.part2{clip-path:polygon(78% 0,100% 0,100% 100%,54% 100%,65% 58%)}
+@container(max-width:720px){#gem.gemTray{left:6px}}
+@container(max-width:600px){#gem.gemTray{left:4px}#sockets{gap:2px}#sockets i{width:15px;height:13px}}

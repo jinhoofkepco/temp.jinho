@@ -10,17 +10,33 @@ function applyViewSettings(){
  $('study').style.setProperty('--zoom',prefs.zoom/100);
  $('samplePage').classList.toggle('spread',prefs.spread);
 }
+function restSeconds(){
+ const state=current(),initial=state.restSeconds??(data.child==='seoa'?750:480);
+ const elapsed=state.restReason==='쉬기'&&state.restStarted?Math.floor((Date.now()-state.restStarted)/1000):0;
+ return Math.max(0,initial-Math.max(0,elapsed));
+}
+function restLabel(){
+ const seconds=restSeconds();
+ return Math.floor(seconds/60)+'분'+(seconds%60?' '+(seconds%60)+'초':'');
+}
+function updateRestClock(){
+ const label=restLabel();
+ $('restBalance').textContent=label;
+ $('rest').setAttribute('aria-label','모은 쉬는 시간 '+label+' · 쉬는 시간 메뉴');
+ const hint=$('popBody').querySelector('[data-rest-remaining]');if(hint)hint.textContent=label;
+}
 function setRest(reason){
  closeReward();cancelGem();closePopup();
- current().restReason=reason;save();hud();
+ const state=current();state.restSeconds=restSeconds();state.restStarted=reason==='쉬기'?Date.now():0;
+ state.restReason=reason;save();hud();
  (reason?$('resume'):$('rest')).focus({preventScroll:true});
 }
 function renderRestChoices(){
  if(current().restReason){row('다시하기',()=>setRest(''));return;}
  const choices=document.createElement('div');choices.className='pauseChoices';
- for(const [reason,detail] of [['쉬기','모은 시간 사용'],['화장실','5분'],['밥','45분'],['학원',''],['잠자기+학교','']]){
+ for(const [reason,detail] of [['쉬기',restLabel()],['화장실','5분'],['밥','45분'],['학원',''],['잠자기+학교','']]){
   const b=document.createElement('button');b.textContent=reason;b.onclick=()=>setRest(reason);
-  if(detail){const small=document.createElement('small');small.textContent=detail;b.append(small);}
+  if(detail){const small=document.createElement('small');small.textContent=detail;if(reason==='쉬기')small.dataset.restRemaining='';b.append(small);}
   choices.append(b);
  }
  $('popBody').append(choices);

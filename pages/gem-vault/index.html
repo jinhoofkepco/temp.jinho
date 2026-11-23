@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#edf1f5"><title>보석 광산 · 공부 화면 보상 체험</title><link rel="icon" href="assets/glass-mint.webp"><link rel="preload" href="assets/emerald-chest-open.webp" as="image"><link rel="stylesheet" href="vault.css?v=menu2"><script defer src="assets/study-zones.js?v=2"></script><script defer src="menu-preview.js?v=menu2"></script><script defer src="vault.js?v=menu2"></script><link rel="stylesheet" href="layout.css?v=menu2"></head>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#edf1f5"><title>보석 광산 · 공부 화면 보상 체험</title><link rel="icon" href="assets/glass-mint.webp"><link rel="preload" href="assets/emerald-chest-open.webp" as="image"><link rel="stylesheet" href="vault.css?v=socket3"><script defer src="assets/study-zones.js?v=2"></script><script defer src="menu-preview.js?v=socket3"></script><script defer src="vault.js?v=socket3"></script><link rel="stylesheet" href="layout.css?v=socket3"></head>
 <body>
 <header class="lab"><div class="brand"><img src="assets/glass-mint.webp" alt=""><b>AiFather</b><span>보상 미리보기</span></div><div class="switch" aria-label="공부 화면 선택"><button data-child="seoa" aria-pressed="false">서아 화면</button><button data-child="seoin" aria-pressed="true">서인 화면</button></div></header>
 <main><section class="previewControls" aria-label="레이아웃 미리보기">
@@ -10,12 +10,14 @@
 <nav class="studybar" aria-label="공부 메뉴">
 <button id="list" class="plain" aria-label="공부 목록" aria-expanded="false"><span aria-hidden="true">☷</span><b id="listLabel">목록</b></button>
 <button id="wallet" class="pill wallet"><i class="coin" aria-hidden="true"></i><b id="balance">118,900원</b></button>
-<button id="gem" class="pill" aria-label="모은 보석"><img id="hudArt" src="assets/glass-mint.webp" alt=""><strong id="gemText">4/5</strong></button>
 <span id="lessonTitle"></span>
+<button id="rest" type="button" aria-controls="popover" aria-expanded="false"><img src="assets/rest-clock.webp" alt=""><span><small>모은 쉬는 시간</small><b id="restBalance"></b></span></button>
+<button id="listen" class="tool" type="button">듣기</button>
 <div id="quickTools"></div>
-<button id="rest" type="button" aria-label="쉬는 시간" aria-controls="popover" aria-expanded="false">쉬는 시간</button>
 <button id="menu" aria-controls="popover" class="plain" aria-label="전체 메뉴" aria-expanded="false">☰</button></nav>
 <div class="study" id="study"><div id="capture"><img id="studyImage" alt=""><div id="zones"></div></div><div id="samplePage" hidden></div></div>
+<button id="gem" class="gemTray" type="button" aria-label="모은 보석" aria-expanded="false">
+<span id="sockets" aria-hidden="true"></span><img id="bankedChest" alt="" hidden></button>
 <section id="restState" hidden aria-label="공부 정지 중"><small>목업 · 정지 중</small><strong id="restReason"></strong><button id="resume" type="button">다시하기</button></section>
 <div id="toast" class="toast" hidden role="status"></div>
 <section id="popover" class="popover" hidden aria-label="공부 메뉴 상세"><header><b id="popTitle"></b><button id="popClose" aria-label="닫기">×</button></header><div id="popBody"></div></section>

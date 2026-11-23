@@ -4,7 +4,7 @@ const standardChest={minDrops:3,maxDrops:5};
 const maxSupportedDrops=10, maxWonPerDrop=10;
 const names={seoa:'서아',seoin:'서인'},lessons={seoa:'단어 시험 연습',seoin:'단어탐정'};
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
-const fresh=()=>({gems:4,rolls:[],shown:0,ledger:[],answered:false,clue:false});
+const fresh=()=>({gems:0,rolls:[],shown:0,ledger:[],answered:false,clue:false});
 function initial(){
  try{const d=JSON.parse(sessionStorage.getItem(key));if(d && Object.hasOwn(names,d.child)&&Object.keys(names).every(k=>{
   const s=d[k];return s&&Number.isInteger(s.gems)&&s.gems>=0&&s.gems<=goal&&Array.isArray(s.ledger)&&s.ledger.every(v=>Number.isInteger(v)&&v>=standardChest.minDrops&&v<=maxSupportedDrops*maxWonPerDrop)&&
@@ -53,7 +53,7 @@ function buildCollection(){
  $('lidPreview').onclick=()=>{showOpen=!showOpen;$('lidPreview').setAttribute('aria-pressed',String(showOpen));paintCollection();};
  paintCollection();
 }
-let opened=false,popup='',earning=null,charging=false,chargeTimer=0,revealTimer=0,toastTimer=0,audioContext;
+let breaking=false,opened=false,popup='',earning=null,charging=false,chargeTimer=0,revealTimer=0,toastTimer=0,audioContext;
 const won=v=>v.toLocaleString('ko-KR')+'원',balance=()=>current().ledger.reduce((a,b)=>a+b,Number($('sample').value)||0);
 const balanceText=()=>$('sample').value==='offline'?'연결 확인':won(balance());
 const sum=()=>current().rolls.slice(0,current().shown).reduce((a,b)=>a+b,0);
@@ -208,18 +208,27 @@ function draw(now){
 }
 function hud(){
  $('gem').setAttribute('aria-expanded',String(opened||popup==='gem'));
- const s=current(),gems=earning?s.gems-1:s.gems,chestReady=!earning&&ready();
- $('gem').classList.toggle('available',chestReady);$('hudArt').src=chestReady?chestSrc(data.chestStyle):gemSrc();
- $('gemText').textContent=opened?'상자 접기':activeRoll()?'이어서':chestReady?'상자 열기':gems+'/5';
- $('gem').setAttribute('aria-label',opened?'보석상자 접기':chestReady?'보석상자 열기':'모은 보석 '+gems+'개, 다섯 개 필요');
+ const s=current(),gems=earning?s.gems-1:s.gems,chestReady=!earning&&!breaking&&ready();
+ const sockets=$('sockets');
+ for(let i=0;i<goal;i++){
+  const slot=sockets.children[i],filled=i<gems&&!opened;
+  const savedColor=s.gemColors?.[i],color=Object.hasOwn(gemStyles,savedColor)?savedColor:data.gemStyle;
+  slot.classList.toggle('filled',filled);
+  slot.style.setProperty('--stone','url("assets/glass-'+color+'.webp")');
+ }
+ const showChest=chestReady&&!opened;
+ $('bankedChest').src=chestSrc(data.chestStyle);$('bankedChest').hidden=!showChest;
+ sockets.hidden=showChest;
+ $('gem').classList.toggle('claim',showChest);$('gem').tabIndex=showChest?0:-1;
+ $('gem').setAttribute('aria-label',chestReady?'보석상자 열기':'모은 보석 '+gems+'개, 다섯 개 필요');
  $('balance').textContent=balanceText();$('wallet').setAttribute('aria-label','통장 '+balanceText()+' · 내역 열기');
  $('lessonName').textContent=names[data.child]+' · '+surfaceTitle();$('lessonTitle').textContent=surfaceTitle();
- $('tip').textContent=opened?(activeRoll()?'금액을 모두 모으면 통장에 적립돼요.':'가운데 상자를 눌러 열어 보세요.'):chestReady?'목록 옆의 상자를 눌러 열어 보세요.':'공부 보상을 받으면 보석이 목록 옆으로 날아가요.';
+ $('tip').textContent=opened?(activeRoll()?'금액을 모두 모으면 통장에 적립돼요.':'가운데 상자를 눌러 열어 보세요.'):chestReady?'목록 아래 상자를 눌러 열어 보세요.':'공부 보상을 받으면 보석이 목록 아래 빈 칸으로 날아가요.';
  const paused=Boolean(s.restReason);
  $('study').inert=paused;$('restState').hidden=!paused;$('restReason').textContent=s.restReason||'';
- $('rest').setAttribute('aria-label',paused?'쉬는 시간 · '+s.restReason:'쉬는 시간');
+ updateRestClock();
  $('gem').disabled=paused;
- $('simulate').disabled=Boolean(earning)||opened||chestReady||paused;
+ $('simulate').disabled=Boolean(earning)||breaking||opened||chestReady||paused;
  document.querySelectorAll('[data-child]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.child===data.child));});
 }
 function lesson(){
@@ -247,15 +256,42 @@ function lesson(){
 function choose(child){if(opened)closeReward();cancelGem();closePopup();$('toast').hidden=true;data.child=child;save();lesson();hud();applyViewSettings();}
 document.querySelectorAll('[data-child]').forEach(b=>b.onclick=()=>choose(b.dataset.child));
 
+let fractureRun=0;
+async function shatterGems(owner){
+ const run=++fractureRun,tray=$('sockets');
+ if(!reduced.matches){
+  const pieces=[];
+  for(const [i,slot] of [...tray.children].entries()){
+   for(let j=0;j<3;j++){
+    const shard=document.createElement('span');
+    shard.className='shard part'+j;slot.append(shard);
+    const x=(j-1)*15+(i-2)*5,y=-14-(i+j)%3*7;
+    const animation=shard.animate([{transform:'none',opacity:1},{offset:.55,transform:'translate('+x+'px,'+y+'px) rotate('+(i-j)*18+'deg)',opacity:1},{transform:'translate('+x*1.6+'px,5px) scale(.22)',opacity:0}],{delay:95+i*18,duration:440,fill:'both'});
+    pieces.push(animation.finished.catch(()=>{}));
+   }
+  }
+  tray.classList.add('fracture');await Promise.all(pieces);
+ }
+ if(run!==fractureRun||current()!==owner)return;
+ clearFracture();hud();
+ if(!owner.restReason)openReward(Boolean(popup));
+}
+function clearFracture(){
+ fractureRun++;breaking=false;
+ $('sockets').classList.remove('fracture');
+ for(const shard of $('sockets').querySelectorAll('.shard')){for(const a of shard.getAnimations())a.cancel();shard.remove();}
+}
 function cancelGem(){
+ if(breaking)clearFracture();
  if(!earning)return;
  earning.animation.cancel();earning.sprite.remove();earning=null;
 }
 function earn(source){
  if(earning||opened||ready())return;
  closePopup();unlock();
- const s=current();s.gems++;save();
- const at=center(source===$('simulate')?$('study'):source),target=center($('hudArt'));
+ const s=current();if(!Array.isArray(s.gemColors))s.gemColors=Array(s.gems).fill(data.gemStyle);
+ s.gemColors[s.gems]=data.gemStyle;s.gems++;save();
+ const at=center(source===$('simulate')?$('study'):source),target=center($('sockets').children[s.gems-1]);
  const sprite=document.createElement('span');sprite.className='flyingGem';sprite.ariaHidden='true';
  const art=document.createElement('img');art.src=gemSrc();art.alt='';
  sprite.append(art,'+1');document.body.append(sprite);
@@ -273,15 +309,21 @@ function earn(source){
  earning={animation,sprite,color};hud();creditSpark(art,[color,'#fff7c7','#e3fffa'],19,.55);tone(659,0,.18,'sine');tone(1318,.06,.18,'sine');
  animation.onfinish=()=>{
   if(earning?.animation!==animation)return;
-  sprite.remove();earning=null;hud();bop($('gem'));creditSpark($('hudArt'),s.gems===goal?gold:green,30,.58);
+  sprite.remove();earning=null;breaking=s.gems===goal;hud();
+  const slot=$('sockets').children[s.gems-1];
+  creditSpark(slot,[color,...green],18,.42);
   tone(988);if(s.gems===goal){
    tone(1244,.10);notify('보석 다섯 개. 보석상자 열기');
-   if(!popup)openReward();
+   shatterGems(s);
   }
   else notify('보석 '+s.gems+'개');
  };
 }
-$('simulate').onclick=()=>earn($('simulate'));
+$('simulate').onclick=()=>{
+ const bar=document.querySelector('.studybar');
+ if(bar.getBoundingClientRect().top<0)bar.scrollIntoView({block:'start',behavior:'instant'});
+ earn($('simulate'));
+};
 function closePopup(){popup='';$('popover').hidden=true;for(const id of ['menu','list','gem','wallet','rest'])$(id).setAttribute('aria-expanded','false');}
 function popText(text){const p=document.createElement('p');p.textContent=text;$('popBody').append(p);}
 function row(text,click,parent=$('popBody')){const b=document.createElement('button');b.className='row';b.textContent=text;b.onclick=click;parent.append(b);}
@@ -320,10 +362,11 @@ function showPopup(kind){
  }
  positionPopup();
 }
+$('listen').onclick=()=>useTool('듣기');
 $('rest').onclick=()=>showPopup('rest');$('resume').onclick=()=>setRest('');
 $('list').onclick=()=>showPopup('list');$('menu').onclick=()=>showPopup('menu');$('wallet').onclick=()=>showPopup('wallet');
-$('gem').onclick=()=>{if(earning)return;if(opened)closeReward();else if(ready())openReward();else showPopup('gem');};$('popClose').onclick=()=>{const id=popup;closePopup();$(id)?.focus();};
-document.addEventListener('pointerdown',e=>{if(popup&&!e.target.closest('.popover,.studybar'))closePopup();});
+$('gem').onclick=()=>{if(earning||breaking)return;if(opened)closeReward();else if(ready())openReward();else showPopup('gem');};$('popClose').onclick=()=>{const id=popup;closePopup();$(id)?.focus();};
+document.addEventListener('pointerdown',e=>{if(popup&&!e.target.closest('.popover,.studybar,#gem'))closePopup();});
 const layer=$('lootLayer'),chest=$('chest'),drops=$('drops');
 function arrangeDrops(){
  const items=[...drops.children];
@@ -355,24 +398,24 @@ function paintChest(){
  chest.disabled=activeRoll();
  $('chestArt').src=chestSrc(data.chestStyle,activeRoll());
 }
-function openReward(){
- if(opened||earning||!ready()||current().restReason)return;
- closePopup();unlock();$('toast').hidden=true;opened=true;layer.hidden=false;
+function openReward(underPopup=false){
+ if(opened||earning||breaking||!ready()||current().restReason)return;
+ if(!underPopup)closePopup();unlock();$('toast').hidden=true;opened=true;layer.hidden=false;
  drops.replaceChildren();current().rolls.slice(0,current().shown).forEach(addDrop);
  paintChest();hud();
  if(activeRoll())scheduleNext();
- else {chest.focus({preventScroll:true});tone(392,0,.19);}
+ else {if(!underPopup)chest.focus({preventScroll:true});tone(392,0,.19);}
 }
 function closeReward(){
  if(!opened)return;
- if(document.activeElement===chest)$('gem').focus({preventScroll:true});
+ if(document.activeElement===chest)$('list').focus({preventScroll:true});
  clearTimeout(revealTimer);clearTimeout(chargeTimer);charging=false;
  opened=false;layer.hidden=true;drops.replaceChildren();hud();
 }
 function roll(low,high){return low+Math.floor(Math.random()*(high-low+1));}
 function openChest(){
  if(!opened||activeRoll()||!charging)return;
- const s=current();charging=false;s.gems=0;
+ const s=current();charging=false;s.gems=0;s.gemColors=[];
  const count=roll(standardChest.minDrops,standardChest.maxDrops);
  s.rolls=Array.from({length:count},()=>roll(1,maxWonPerDrop));s.shown=0;
  save();paintChest();hud();
@@ -439,10 +482,10 @@ function changeSurface(value){
  closeReward();cancelGem();closePopup();$('toast').hidden=true;$('surface').value=value;lesson();hud();
 }
 const inlineTools={
- home:['황금시계','클릭질문'],
- book:['듣기','클릭질문','음성질문'],
+ home:['클릭질문'],
+ book:['클릭질문','음성질문'],
  question:['클릭질문'],
- activity:['듣기','클릭질문','음성질문']
+ activity:['클릭질문','음성질문']
 };
 function useTool(label){
  closeReward();closePopup();
@@ -500,7 +543,9 @@ $('studyImage').onload=()=>{
  const img=$('studyImage');
  if(img.naturalHeight)$('capture').style.setProperty('--shot-ratio',img.naturalWidth/img.naturalHeight);
 };
+for(let i=0;i<goal;i++)$('sockets').append(document.createElement('i'));
 const demoParams=new URLSearchParams(location.search);
 if([...$('surface').options].some(o=>o.value===demoParams.get('surface')))$('surface').value=demoParams.get('surface');
 lesson();buildCollection();applyViewSettings();
-if(['menu','rest'].includes(demoParams.get('panel')))showPopup(demoParams.get('panel'));
+setInterval(()=>{if(!document.hidden&&current().restReason==='쉬기')updateRestClock();},1000);
+if(['list','menu','rest'].includes(demoParams.get('panel')))showPopup(demoParams.get('panel'));
