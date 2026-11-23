@@ -5,7 +5,7 @@
 #previewFrame{container-type:inline-size;max-width:100%;margin-inline:auto;--bar-height:48px}
 .screen{--bar:var(--bar-height)}
 .studybar{
- height:var(--bar);display:grid;grid-template-columns:clamp(94px,16cqw,165px) auto auto minmax(0,1fr) auto auto;
+ height:var(--bar);display:grid;grid-template-columns:clamp(94px,16cqw,165px) auto auto minmax(0,1fr) auto auto auto;
  align-items:center;gap:6px;padding:0 10px;white-space:nowrap;
 }
 .studybar>*{min-width:0}
@@ -32,13 +32,13 @@
 .popover{top:calc(var(--bar) + 3px);max-height:calc(100% - var(--bar) - 10px);overflow:auto;overscroll-behavior:contain}
 .toast{top:calc(var(--bar) + 6px);max-width:95%;white-space:normal}
 @container(max-width:850px){.tool{font-size:12px;padding-inline:5px}}
-@container(max-width:670px){
- .studybar{grid-template-columns:clamp(70px,16cqw,104px) auto auto minmax(0,1fr) auto auto;gap:4px;padding-inline:6px}
+@container(max-width:720px){
+ .studybar{grid-template-columns:clamp(70px,16cqw,104px) auto auto minmax(0,1fr) auto auto auto;gap:4px;padding-inline:6px}
  #quickTools .tool:nth-child(n+3){display:none}
 }
-@container(max-width:530px){
+@container(max-width:600px){
  .screen{--bar:42px}
- .studybar{grid-template-columns:clamp(52px,16cqw,82px) auto auto minmax(0,1fr) auto auto;padding-inline:4px;gap:3px}
+ .studybar{grid-template-columns:clamp(52px,16cqw,82px) auto auto minmax(0,1fr) auto auto auto;padding-inline:4px;gap:3px}
  .studybar button{min-height:31px;padding:2px 5px}
  #quickTools .tool{display:none}
  #list{gap:2px}#list span{font-size:14px}#listLabel{font-size:12px}
@@ -51,7 +51,46 @@
 #listLabel .listDetail{font-style:normal}
 #wallet{width:142px;font-variant-numeric:tabular-nums}
 @container(max-width:850px){#wallet{width:134px}}
-@container(max-width:530px){#wallet{width:106px}#listLabel .listDetail{display:none}}
+@container(max-width:600px){#wallet{width:106px}#listLabel .listDetail{display:none}}
 @container(max-width:370px){#lessonTitle{visibility:hidden}}
 .study{container-type:size}
 #capture{position:relative;margin-inline:auto;width:min(100%,calc(100cqh * var(--shot-ratio,1.9)));aspect-ratio:var(--shot-ratio,1.9)}
+#rest{background:#fff3d9;color:#704619;border:1px solid #cfb382;border-radius:8px;white-space:nowrap;font-size:13px;font-weight:700;padding:0 9px;min-height:32px}
+#rest[aria-expanded=true],#menu[aria-expanded=true]{outline:2px solid #527966;outline-offset:-2px}
+@container(max-width:600px){#rest{padding-inline:5px;font-size:12px}}
+@container(max-width:385px){
+ .studybar{grid-template-columns:minmax(48px,1fr) 98px 48px 56px 31px;gap:3px}
+ #lessonTitle,#quickTools{display:none}#wallet{width:98px}
+ #gem.available strong{display:none}
+}
+#popover[data-panel=menu]{width:min(354px,calc(100% - 10px));padding:12px;background:#fffef9}
+#popover[data-panel=menu] header{position:sticky;top:-12px;background:#fffef9;z-index:1;border-bottom:1px solid #dbe4d9;margin-bottom:8px}
+.viewTools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.viewTools button,.zoomLine button,.pauseChoices button{background:#eff4ed;border:1px solid #c8d7c9;border-radius:8px;padding:6px 2px;font-size:12px;font-weight:650}
+.viewTools button span{display:block;font-size:18px}.viewTools button:disabled,.zoomLine button:disabled{color:#87918c;background:#f2f3ee}
+.viewTools button[aria-pressed=true]{background:#d4ebd9}
+.viewTools:has(>button:last-child:nth-child(2)){grid-template-columns:1fr 1fr}
+.zoomLine,.rateLine{display:flex;align-items:center;gap:5px;margin-top:8px;padding-top:7px;border-top:1px solid #dde4d9;font-size:13px}
+.zoomLine b{margin-right:auto}.zoomLine button{min-width:36px;padding:5px 8px}
+.rateLine label{display:flex;align-items:center;gap:5px;flex:1;white-space:nowrap}
+.rateLine select{min-width:0;color:inherit;font:inherit;background:white;border:1px solid #c4d1c6;border-radius:6px;padding:4px 1px}
+#popBody details{margin-top:8px;font-size:13px}#popBody summary{cursor:pointer}
+.pauseChoices{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.pauseChoices button{min-height:40px}.pauseChoices button:first-child{grid-column:1/-1;background:#e2efdb}
+.pauseChoices small{display:block;color:#566758}
+#restState{position:absolute;inset:var(--bar) 0 0;background:#eff5edee;z-index:3;display:grid;align-content:center;justify-items:center;gap:10px;}
+#restState strong{font-size:28px}#restState button{background:#285944;color:white;border-radius:9px;padding:8px 18px}
+#samplePage{font-size:calc(16px * var(--zoom,1))}
+#samplePage h2{font-size:calc(clamp(24px,4cqw,36px) * var(--zoom,1))}
+#samplePage[data-surface=book]{font-size:calc(clamp(18px,2.6cqw,25px) * var(--zoom,1))}
+#samplePage.spread[data-surface=book] p{width:48%;display:inline-block;vertical-align:top;margin-right:2%}
+#capture{transform:scale(var(--zoom,1));transform-origin:top center}
+@container(min-width:740px){
+ #popover[data-panel=menu]:has(.viewStrip){width:min(700px,calc(100% - 12px))}
+ .viewStrip{display:flex;gap:10px;align-items:center}
+ .viewStrip .viewTools{flex:1}
+ .viewStrip .zoomLine,.viewStrip .rateLine{margin:0;border-top:0;padding:0 0 0 10px;border-left:1px solid #d7dfd4;gap:3px}
+ .viewStrip .zoomLine b{display:none}
+ .viewStrip .rateLine select{max-width:62px}
+}
+#popover[data-panel=menu]{background:linear-gradient(#fffffff7,#edf2eff4);backdrop-filter:blur(12px);box-shadow:inset 0 1px #fff,0 7px 24px #233f3430}

@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#edf1f5"><title>보석 광산 · 공부 화면 보상 체험</title><link rel="icon" href="assets/glass-mint.webp"><link rel="preload" href="assets/emerald-chest-open.webp" as="image"><link rel="stylesheet" href="vault.css?v=layout1"><script defer src="assets/study-zones.js?v=2"></script><script defer src="vault.js?v=layout1"></script><link rel="stylesheet" href="layout.css?v=layout1"></head>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#edf1f5"><title>보석 광산 · 공부 화면 보상 체험</title><link rel="icon" href="assets/glass-mint.webp"><link rel="preload" href="assets/emerald-chest-open.webp" as="image"><link rel="stylesheet" href="vault.css?v=menu2"><script defer src="assets/study-zones.js?v=2"></script><script defer src="menu-preview.js?v=menu2"></script><script defer src="vault.js?v=menu2"></script><link rel="stylesheet" href="layout.css?v=menu2"></head>
 <body>
 <header class="lab"><div class="brand"><img src="assets/glass-mint.webp" alt=""><b>AiFather</b><span>보상 미리보기</span></div><div class="switch" aria-label="공부 화면 선택"><button data-child="seoa" aria-pressed="false">서아 화면</button><button data-child="seoin" aria-pressed="true">서인 화면</button></div></header>
 <main><section class="previewControls" aria-label="레이아웃 미리보기">
@@ -13,8 +13,10 @@
 <button id="gem" class="pill" aria-label="모은 보석"><img id="hudArt" src="assets/glass-mint.webp" alt=""><strong id="gemText">4/5</strong></button>
 <span id="lessonTitle"></span>
 <div id="quickTools"></div>
-<button id="menu" class="plain" aria-label="전체 메뉴" aria-expanded="false">☰</button></nav>
+<button id="rest" type="button" aria-label="쉬는 시간" aria-controls="popover" aria-expanded="false">쉬는 시간</button>
+<button id="menu" aria-controls="popover" class="plain" aria-label="전체 메뉴" aria-expanded="false">☰</button></nav>
 <div class="study" id="study"><div id="capture"><img id="studyImage" alt=""><div id="zones"></div></div><div id="samplePage" hidden></div></div>
+<section id="restState" hidden aria-label="공부 정지 중"><small>목업 · 정지 중</small><strong id="restReason"></strong><button id="resume" type="button">다시하기</button></section>
 <div id="toast" class="toast" hidden role="status"></div>
 <section id="popover" class="popover" hidden aria-label="공부 메뉴 상세"><header><b id="popTitle"></b><button id="popClose" aria-label="닫기">×</button></header><div id="popBody"></div></section>
 <div id="lootLayer" hidden>

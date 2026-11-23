@@ -215,7 +215,11 @@ function hud(){
  $('balance').textContent=balanceText();$('wallet').setAttribute('aria-label','통장 '+balanceText()+' · 내역 열기');
  $('lessonName').textContent=names[data.child]+' · '+surfaceTitle();$('lessonTitle').textContent=surfaceTitle();
  $('tip').textContent=opened?(activeRoll()?'금액을 모두 모으면 통장에 적립돼요.':'가운데 상자를 눌러 열어 보세요.'):chestReady?'목록 옆의 상자를 눌러 열어 보세요.':'공부 보상을 받으면 보석이 목록 옆으로 날아가요.';
- $('simulate').disabled=Boolean(earning)||opened||chestReady;
+ const paused=Boolean(s.restReason);
+ $('study').inert=paused;$('restState').hidden=!paused;$('restReason').textContent=s.restReason||'';
+ $('rest').setAttribute('aria-label',paused?'쉬는 시간 · '+s.restReason:'쉬는 시간');
+ $('gem').disabled=paused;
+ $('simulate').disabled=Boolean(earning)||opened||chestReady||paused;
  document.querySelectorAll('[data-child]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.child===data.child));});
 }
 function lesson(){
@@ -240,7 +244,7 @@ function lesson(){
   };$('zones').append(button);
  }
 }
-function choose(child){if(opened)closeReward();cancelGem();closePopup();$('toast').hidden=true;data.child=child;save();lesson();hud();}
+function choose(child){if(opened)closeReward();cancelGem();closePopup();$('toast').hidden=true;data.child=child;save();lesson();hud();applyViewSettings();}
 document.querySelectorAll('[data-child]').forEach(b=>b.onclick=()=>choose(b.dataset.child));
 
 function cancelGem(){
@@ -278,21 +282,21 @@ function earn(source){
  };
 }
 $('simulate').onclick=()=>earn($('simulate'));
-function closePopup(){popup='';$('popover').hidden=true;for(const id of ['menu','list','gem','wallet'])$(id).setAttribute('aria-expanded','false');}
+function closePopup(){popup='';$('popover').hidden=true;for(const id of ['menu','list','gem','wallet','rest'])$(id).setAttribute('aria-expanded','false');}
 function popText(text){const p=document.createElement('p');p.textContent=text;$('popBody').append(p);}
-function row(text,click){const b=document.createElement('button');b.className='row';b.textContent=text;b.onclick=click;$('popBody').append(b);}
+function row(text,click,parent=$('popBody')){const b=document.createElement('button');b.className='row';b.textContent=text;b.onclick=click;parent.append(b);}
 function positionPopup(){
  if(!popup)return;
  const host=document.querySelector('.screen').getBoundingClientRect();
  const box=$('popover'),button=$(popup).getBoundingClientRect();
- const start=popup==='menu'?button.right-host.left-box.offsetWidth:button.left-host.left;
+ const start=['menu','rest'].includes(popup)?button.right-host.left-box.offsetWidth:button.left-host.left;
  box.style.left=Math.max(4,Math.min(start,host.width-box.offsetWidth-5))+'px';box.style.right='auto';
 }
 function showPopup(kind){
  if(opened)closeReward();if(popup===kind){closePopup();return;}
  closePopup();popup=kind;$('toast').hidden=true;const box=$('popover'),s=current();
- box.hidden=false;box.classList.toggle('menu',kind==='menu');$(kind).setAttribute('aria-expanded','true');$('popBody').replaceChildren();
- $('popTitle').textContent={gem:'모은 보석',wallet:names[data.child]+'의 체험 통장',list:'공부 목록',menu:'전체 메뉴'}[kind];
+ box.hidden=false;box.classList.toggle('menu',kind==='menu');box.dataset.panel=kind;$(kind).setAttribute('aria-expanded','true');$('popBody').replaceChildren();
+ $('popTitle').textContent={gem:'모은 보석',wallet:names[data.child]+'의 체험 통장',list:'공부 목록',menu:$('surface').value==='home'?'설정':'보기 메뉴',rest:'쉬는 시간'}[kind];
  if(kind==='wallet'){
   popText($('sample').value==='offline'?'통장 연결 확인 중':'현재 잔액 '+won(balance()));
   if(!s.ledger.length)popText('상자를 열면 여기에 적립 내역이 생겨.');
@@ -305,14 +309,18 @@ function showPopup(kind){
   }
   for(const option of $('surface').options)row(surfaceTitle(option.value),()=>changeSurface(option.value));
  }
+ else if(kind==='rest'){renderRestChoices();}
  else{
+  renderViewMenu();
   for(const tool of $('quickTools').children)if(!tool.getClientRects().length)row(tool.textContent,()=>useTool(tool.textContent));
-  row($('gem').ariaLabel,()=>$('gem').click());
-  row('통장 내역 · '+balanceText(),()=>showPopup('wallet'));
-  row(data.sound?'효과음 끄기':'효과음 켜기',()=>{data.sound=!data.sound;unlock();save();closePopup();showPopup('menu');});
+  const more=document.createElement('details'),summary=document.createElement('summary');summary.textContent='보상';more.append(summary);$('popBody').append(more);
+  row($('gem').ariaLabel,()=>$('gem').click(),more);
+  row('통장 내역 · '+balanceText(),()=>showPopup('wallet'),more);
+  row(data.sound?'효과음 끄기':'효과음 켜기',()=>{data.sound=!data.sound;unlock();save();closePopup();showPopup('menu');$('popBody').querySelector('details').open=true;},more);
  }
  positionPopup();
 }
+$('rest').onclick=()=>showPopup('rest');$('resume').onclick=()=>setRest('');
 $('list').onclick=()=>showPopup('list');$('menu').onclick=()=>showPopup('menu');$('wallet').onclick=()=>showPopup('wallet');
 $('gem').onclick=()=>{if(earning)return;if(opened)closeReward();else if(ready())openReward();else showPopup('gem');};$('popClose').onclick=()=>{const id=popup;closePopup();$(id)?.focus();};
 document.addEventListener('pointerdown',e=>{if(popup&&!e.target.closest('.popover,.studybar'))closePopup();});
@@ -348,7 +356,7 @@ function paintChest(){
  $('chestArt').src=chestSrc(data.chestStyle,activeRoll());
 }
 function openReward(){
- if(opened||earning||!ready())return;
+ if(opened||earning||!ready()||current().restReason)return;
  closePopup();unlock();$('toast').hidden=true;opened=true;layer.hidden=false;
  drops.replaceChildren();current().rolls.slice(0,current().shown).forEach(addDrop);
  paintChest();hud();
@@ -432,12 +440,13 @@ function changeSurface(value){
 }
 const inlineTools={
  home:['황금시계','클릭질문'],
- book:['듣기','쉬는 시간','클릭질문','음성질문'],
- question:['쉬는 시간','클릭질문'],
- activity:['듣기','쉬는 시간','클릭질문','음성질문']
+ book:['듣기','클릭질문','음성질문'],
+ question:['클릭질문'],
+ activity:['듣기','클릭질문','음성질문']
 };
 function useTool(label){
  closeReward();closePopup();
+ if(label==='황금시계'){showPopup('rest');return;}
  if(label==='클릭질문'||label==='음성질문'){changeSurface('question');return;}
  toast(label+' · 목업 미리보기');
 }
@@ -478,16 +487,20 @@ $('device').onchange=()=>{
  const [w,h]=$('device').value.split('x').map(Number),frame=$('previewFrame');
  frame.style.width=w?w+'px':'';frame.style.setProperty('--mock-height',h?h+'px':'');
 };
-let previousNarrow;
+let previousNarrow,previousMenuWidth;
 new ResizeObserver(()=>{
  const width=$('study').clientWidth,narrow=width<=650;
  $('sizeReadout').textContent=width+' px';
  if(narrow!==previousNarrow){previousNarrow=narrow;lesson();}
- if(popup==='menu'){closePopup();showPopup('menu');}
+ if(popup==='menu'&&previousMenuWidth!==width){const scroll=$('popover').scrollTop;closePopup();showPopup('menu');$('popover').scrollTop=scroll;}
+ previousMenuWidth=width;
  positionPopup();arrangeDrops();
 }).observe($('study'));
 $('studyImage').onload=()=>{
  const img=$('studyImage');
  if(img.naturalHeight)$('capture').style.setProperty('--shot-ratio',img.naturalWidth/img.naturalHeight);
 };
-lesson();buildCollection();
+const demoParams=new URLSearchParams(location.search);
+if([...$('surface').options].some(o=>o.value===demoParams.get('surface')))$('surface').value=demoParams.get('surface');
+lesson();buildCollection();applyViewSettings();
+if(['menu','rest'].includes(demoParams.get('panel')))showPopup(demoParams.get('panel'));
