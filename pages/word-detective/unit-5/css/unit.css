@@ -1,0 +1,22 @@
+.unit-index { margin: 0; color: #3b2a1e; background: #f6ecd8; font-family: system-ui, sans-serif; }
+.unit { width: min(100% - 2rem, 52rem); margin: 1.5rem auto 3rem; }
+.library-link, .back-to-unit { color: inherit; text-underline-offset: .25em; font-weight: 700; }
+.unit-header { display: grid; grid-template-columns: 1fr 1.05fr; align-items: center; gap: 1rem; background: #3b2a1e; color: #fff7e5; border-radius: 1.25rem; overflow: hidden; margin: 1rem 0 1.75rem; }
+.unit-header > div { padding: 1.35rem; }
+.unit-header p { margin: 0 0 .5rem; color: #f3cd78; font-size: .9rem; }
+.unit-header h1 { margin: 0; font-size: clamp(1.6rem, 5vw, 3.2rem); line-height: 1.15; }
+.unit-header img { width: 100%; height: 100%; min-height: 9rem; object-fit: cover; }
+.unit h2 { font-size: 1.2rem; }
+.sessions { display: grid; gap: .6rem; margin: 0; padding: 0; list-style: none; }
+.sessions a { display: grid; grid-template-columns: 4rem 1fr auto; align-items: center; gap: .75rem; padding: .9rem 1rem; background: #fffaf0; color: inherit; text-decoration: none; border: 1px solid #d8c39c; border-radius: .75rem; }
+.sessions a:hover, .sessions a:focus-visible { background: #ffedbd; border-color: #9a651d; }
+.sessions span, .sessions small { color: #654f3d; }
+.sessions small { white-space: nowrap; }
+.back-to-unit { font-size: .85rem; white-space: nowrap; }
+@media (max-width: 36rem) {
+  .unit-header > div { padding: .9rem; }
+  .sessions a { grid-template-columns: auto 1fr; }
+  .sessions small { grid-column: 2; }
+  .bar .progress { min-width: 0; gap: 3px; }
+  .bar .pcase { min-width: 0; flex: 0 1 13px; }
+}

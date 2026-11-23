@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#3b2a1e">
+  <title>Word Detective · 5단원</title>
+  <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/unit.css">
+</head>
+<body>
+  <div class="app">
+    <header class="bar">
+      <a class="back-to-unit" href="index.html">5단원 회차 목록</a>
+      <button id="exitBtn" class="btn icon ghost" aria-label="나가기">✕</button>
+      <div id="progress" class="progress" aria-label="오늘의 사건"></div>
+      <button id="replayBtn" class="btn icon ghost" aria-label="다시 듣기">🔁</button>
+    </header>
+
+    <main class="main">
+      <section id="stage" class="stage" aria-live="polite"></section>
+      <section id="panel" class="panel"></section>
+    </main>
+
+    <footer id="caption" class="caption" aria-live="polite"></footer>
+  </div>
+
+  <div id="confirm" class="modal" hidden>
+    <div class="modal-card">
+      <p>탐정 놀이를 그만할까요?</p>
+      <div class="modal-actions">
+        <button id="stay" class="btn primary">계속하기</button>
+        <button id="leave" class="btn">그만하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/content.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/bridge.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
