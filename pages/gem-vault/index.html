@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#edf1f5"><title>보석 광산 · 공부 화면 보상 체험</title><link rel="icon" href="assets/gem.png"><link rel="stylesheet" href="vault.css?v=study2"><script defer src="assets/study-zones.js?v=2"></script><script defer src="vault.js?v=study2"></script></head>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#edf1f5"><title>보석 광산 · 공부 화면 보상 체험</title><link rel="icon" href="assets/gem.png"><link rel="stylesheet" href="vault.css?v=study3"><script defer src="assets/study-zones.js?v=2"></script><script defer src="vault.js?v=study3"></script></head>
 <body>
 <header class="lab"><div class="brand"><img src="assets/gem.png" alt=""><b>AiFather</b><span>보상 미리보기</span></div><div class="switch" aria-label="공부 화면 선택"><button data-child="seoa" aria-pressed="false">서아 화면</button><button data-child="seoin" aria-pressed="true">서인 화면</button></div></header>
 <main><section class="screen" aria-label="공부 화면과 보상 레이어">
@@ -6,14 +6,14 @@
 <div class="study" id="study"><img id="studyImage" alt=""><div id="zones"></div></div>
 <div id="toast" class="toast" hidden role="status"></div>
 <section id="popover" class="popover" hidden aria-label="공부 메뉴 상세"><header><b id="popTitle"></b><button id="popClose" aria-label="닫기">×</button></header><div id="popBody"></div></section>
-<div id="veil" class="veil" hidden><section id="reward" class="reward" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
-<div class="rewardTop"><span class="gameBrand"><img src="assets/gem.png" alt=""> GEM VAULT</span><button id="dismiss" aria-label="상자를 접고 공부로 돌아가기">×</button></div>
-<h1 id="rewardTitle">보석상자</h1><p id="rewardHint"></p>
-<div class="stage" id="stage"><div class="rays"></div><div class="halo"></div><button id="chest" type="button" aria-label="길게 눌러 상자 열기"><img src="assets/chest.png" id="chestArt" alt=""></button><span class="chargeTrack"><i id="chargeFill"></i></span></div>
-<ol id="cards" aria-label="상자 속 다섯 장의 카드"></ol>
-<div class="settle"><span id="line"></span><strong><span id="total">0</span><small>원</small></strong></div>
-<div class="rewardActions"><button id="rewardAction" class="primary"></button><button id="historyAction" hidden>적립 내역</button></div>
-</section></div>
+<div id="lootLayer" hidden>
+  <div class="lootAnchor">
+    <div class="aura" aria-hidden="true"></div>
+    <div class="glints" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div>
+    <button id="chest" type="button" aria-label="보석상자 열기"><img id="chestArt" src="assets/chest.png" alt=""></button>
+    <ol id="drops" aria-label="꺼낸 금액"></ol>
+  </div>
+</div>
 <canvas id="fx" aria-hidden="true"></canvas>
 </section>
 <div class="demo"><div><strong id="lessonName"></strong><span>공부 화면 캡처 · 체험용 잔액</span></div><button id="simulate"><img src="assets/gem.png" alt=""> 공부 보상 체험 <b>+1</b></button></div>
