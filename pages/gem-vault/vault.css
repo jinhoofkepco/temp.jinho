@@ -63,3 +63,24 @@
 #lootLayer.rolling[data-design=wood] #drops{bottom:148%}
 #lootLayer.rolling[data-design=silver] #drops{bottom:123%}
 #lootLayer.rolling[data-design=royal] #drops{bottom:152%}
+#fx{z-index:2}
+#lootLayer.charging .aura,#lootLayer.finalBeat .aura{
+  inset:-65% -45%;background:repeating-conic-gradient(from 14deg,transparent 0 17deg,var(--chest-light) 19deg,transparent 23deg 36deg);
+  mask-image:radial-gradient(ellipse,#000 12%,#0009 47%,transparent 72%);animation:drawIn .84s ease-in both
+}
+#lootLayer.finalBeat .aura{animation-duration:1.16s}
+#lootLayer.rolling:not(.finalBeat) .aura{inset:-70% -50% -28%;animation-duration:5.6s}
+.lootAnchor::after{content:"";position:absolute;z-index:-1;inset:14% -56%;pointer-events:none;opacity:0;border-radius:50%;border:3px solid var(--chest-light);box-shadow:0 0 9px var(--chest-light),inset 0 0 5px #fffbc9}
+.rolling .lootAnchor::after{animation:shockfront .85s cubic-bezier(.15,.65,.25,1) both}
+@keyframes drawIn{0%{opacity:.3;transform:rotate(-38deg) scale(1.4)}75%{opacity:.95}100%{opacity:.88;transform:rotate(32deg) scale(.48)}}
+@keyframes shockfront{0%{opacity:0;transform:scale(.12)}15%{opacity:1}100%{opacity:0;transform:scale(1.28)}}
+.lootAnchor::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;left:-40%;width:180%;height:200%;bottom:42%;opacity:0;
+  transform-origin:50% 100%;
+  background:conic-gradient(from -44deg at 50% 100%,transparent 0 6deg,var(--chest-light) 8deg,transparent 11deg 19deg,#ffc153 21deg,transparent 25deg 34deg,var(--chest-light) 37deg,#fff5b2 40deg,transparent 44deg 50deg,#ffd452 53deg,transparent 57deg 67deg,var(--chest-light) 70deg,transparent 75deg);
+  mask-image:linear-gradient(transparent,#0009 40%,#000 96%)
+}
+.rolling .lootAnchor::before{animation:lightFan 1.02s ease-out both}
+.rolling.finalBurst .lootAnchor::before{animation:finalFan 1s ease-out both}
+@keyframes lightFan{0%{opacity:0;transform:scale(.42,.05)}18%{opacity:.95;transform:scale(.9,1.04)}100%{opacity:0;transform:scale(1.12,1.08)}}
+@keyframes finalFan{0%{opacity:0;transform:scale(.32,.1)}20%{opacity:1;transform:scale(1.05,1.12)}100%{opacity:0;transform:scale(1.25,1.18)}}
