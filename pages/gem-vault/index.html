@@ -1,34 +1,22 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#121720">
-<meta name="description" content="공부 보석을 모으고 상자 속 다섯 장의 보상 카드를 열어보는 픽셀 아케이드 목업.">
-<title>보석 광산 · GEM VAULT</title>
-<link rel="icon" href="assets/gem.png"><link rel="preload" as="font" type="font/woff2" href="assets/Galmuri11-Bold.woff2" crossorigin>
-<link rel="stylesheet" href="vault.css"><script defer src="vault.js"></script>
-</head>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#edf1f5"><title>보석 광산 · 공부 화면 보상 체험</title><link rel="icon" href="assets/gem.png"><link rel="stylesheet" href="vault.css?v=study2"><script defer src="assets/study-zones.js?v=2"></script><script defer src="vault.js?v=study2"></script></head>
 <body>
-<header class="bar"><div class="nav">
-<a class="brand" href="./" aria-label="보석 광산 홈"><img src="assets/gem.png" alt=""><span>GEM VAULT</span></a>
-<div class="hud"><div class="wallet"><i class="coin" aria-hidden="true"></i><span>체험 잔액</span><strong id="balance">0원</strong></div>
-<button id="audio" type="button" aria-pressed="false" aria-label="효과음 켜기" title="효과음 켜기"><span class="speaker"></span><span class="waves" aria-hidden="true">×</span></button></div>
-</div></header>
-<main>
-<div class="intro"><div><h1>보석 광산</h1><p id="hint">보석 5개를 모아 상자를 열어 봐!</p></div><span class="preview">목업 체험</span></div>
-<section class="arena" id="arena" aria-label="보석과 상자">
-<div class="rays"></div><div class="aura"></div><div class="motes" aria-hidden="true"></div>
-<div class="meter"><div class="meterHead"><b>모은 보석</b><strong><span id="count">4</span><small> / 5</small></strong></div><div class="segments" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
-<button id="loot" type="button" aria-label="보석 1개 받기"><img src="assets/gem.png" alt="" id="relic"></button>
-<div id="callout" aria-hidden="true"></div>
-<button id="play" type="button"><img src="assets/gem.png" alt=""><span id="buttonText">보석 받기 +1</span></button>
+<header class="lab"><div class="brand"><img src="assets/gem.png" alt=""><b>AiFather</b><span>보상 미리보기</span></div><div class="switch" aria-label="공부 화면 선택"><button data-child="seoa" aria-pressed="false">서아 화면</button><button data-child="seoin" aria-pressed="true">서인 화면</button></div></header>
+<main><section class="screen" aria-label="공부 화면과 보상 레이어">
+<nav class="studybar" aria-label="공부 메뉴"><button id="list" class="plain" aria-expanded="false"><span aria-hidden="true">☷</span> 목록</button><button id="gem" class="pill" aria-label="모은 보석"><img id="hudArt" src="assets/gem.png" alt=""><strong id="gemText">4/5</strong></button><button id="wallet" class="pill wallet"><i class="coin" aria-hidden="true"></i><b id="balance">0원</b></button><span id="lessonTitle"></span><button id="menu" class="plain" aria-label="전체 메뉴" aria-expanded="false"><span aria-hidden="true">☰</span></button></nav>
+<div class="study" id="study"><img id="studyImage" alt=""><div id="zones"></div></div>
+<div id="toast" class="toast" hidden role="status"></div>
+<section id="popover" class="popover" hidden aria-label="공부 메뉴 상세"><header><b id="popTitle"></b><button id="popClose" aria-label="닫기">×</button></header><div id="popBody"></div></section>
+<div id="veil" class="veil" hidden><section id="reward" class="reward" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+<div class="rewardTop"><span class="gameBrand"><img src="assets/gem.png" alt=""> GEM VAULT</span><button id="dismiss" aria-label="상자를 접고 공부로 돌아가기">×</button></div>
+<h1 id="rewardTitle">보석상자</h1><p id="rewardHint"></p>
+<div class="stage" id="stage"><div class="rays"></div><div class="halo"></div><button id="chest" type="button" aria-label="길게 눌러 상자 열기"><img src="assets/chest.png" id="chestArt" alt=""></button><span class="chargeTrack"><i id="chargeFill"></i></span></div>
+<ol id="cards" aria-label="상자 속 다섯 장의 카드"></ol>
+<div class="settle"><span id="line"></span><strong><span id="total">0</span><small>원</small></strong></div>
+<div class="rewardActions"><button id="rewardAction" class="primary"></button><button id="historyAction" hidden>적립 내역</button></div>
+</section></div>
+<canvas id="fx" aria-hidden="true"></canvas>
 </section>
-<section class="rewards" aria-labelledby="rewardsTitle">
-<div class="rewardHead"><div><h2 id="rewardsTitle"><i class="cardsIcon" aria-hidden="true"></i>상자 속 보상</h2><p>카드 5장 · 한 장에 1~10원</p></div>
-<div class="boxTotal">이번 상자<strong><span id="total">0</span><small>원</small></strong></div></div>
-<ol id="cards" aria-label="순서대로 열리는 다섯 장의 카드"></ol>
-<p class="caption" id="caption">상자를 열면 카드가 한 장씩 뒤집혀.</p>
-</section>
-</main><canvas id="fx" aria-hidden="true"></canvas><div class="sr" role="status" id="announce" aria-live="polite" aria-atomic="true"></div>
+<div class="demo"><div><strong id="lessonName"></strong><span>공부 화면 캡처 · 체험용 잔액</span></div><button id="simulate"><img src="assets/gem.png" alt=""> 공부 보상 체험 <b>+1</b></button></div>
+<p id="tip"></p>
+</main><span class="sr" id="announce" role="status" aria-live="polite"></span>
 </body></html>
