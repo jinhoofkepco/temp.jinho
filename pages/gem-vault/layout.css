@@ -1,0 +1,57 @@
+.previewControls{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:0 0 12px;font-size:13px;color:#496253}
+.previewControls label{display:flex;align-items:center;gap:6px;font-weight:650}
+.previewControls select{font:inherit;padding:5px 7px;border:1px solid #b8cbbc;border-radius:7px;background:#fffef9;color:#294434}
+#sizeReadout{margin-left:auto;font:12px ui-monospace,monospace;color:#567060}
+#previewFrame{container-type:inline-size;max-width:100%;margin-inline:auto;--bar-height:48px}
+.screen{--bar:var(--bar-height)}
+.studybar{
+ height:var(--bar);display:grid;grid-template-columns:clamp(94px,16cqw,165px) auto auto minmax(0,1fr) auto auto;
+ align-items:center;gap:6px;padding:0 10px;white-space:nowrap;
+}
+.studybar>*{min-width:0}
+#list{display:flex;align-items:center;gap:5px;overflow:hidden}
+#listLabel,#lessonTitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lessonTitle{display:block;font-size:13px}
+#gem,#wallet{display:inline-flex;align-items:center;justify-content:center;margin:0;white-space:nowrap}
+#gem{min-width:74px}
+#menu{margin:0;width:36px}
+#quickTools{display:flex;gap:4px}
+.tool{min-height:32px;padding:4px 8px;border-radius:8px;background:#e8f1e9;border:1px solid #bfcec3;font-size:13px;font-weight:650;white-space:nowrap}
+.study{height:calc(var(--mock-height,clamp(355px,51cqw,560px)) - var(--bar));aspect-ratio:auto}
+.study img{position:absolute;inset:0}
+#samplePage{position:absolute;inset:0;overflow:auto;padding:clamp(16px,4cqw,44px);color:#233c33;background:#f6f8f2}
+#samplePage small{color:#587568;font-size:13px;font-weight:650}
+#samplePage h2{font-size:clamp(24px,4cqw,36px);margin:8px 0 18px}
+#samplePage p{max-width:50ch;line-height:1.65}
+#samplePage[data-surface=book]{background:#fffaf0;font:clamp(18px,2.6cqw,25px) Georgia,serif}
+.homeActivity{display:block;margin:7px 0;width:min(100%,700px);border:1px solid #c5d6cb;border-radius:11px;background:white;text-align:left;padding:13px 16px;font-weight:600}
+.homeActivity::after{content:'›';float:right;color:#466e5c}
+#fx{position:absolute;inset:0;width:100%;height:100%}
+#lootLayer{inset:var(--bar) 0 0}
+.lootAnchor{top:53%;width:clamp(118px,18cqw,190px)}
+.popover{top:calc(var(--bar) + 3px);max-height:calc(100% - var(--bar) - 10px);overflow:auto;overscroll-behavior:contain}
+.toast{top:calc(var(--bar) + 6px);max-width:95%;white-space:normal}
+@container(max-width:850px){.tool{font-size:12px;padding-inline:5px}}
+@container(max-width:670px){
+ .studybar{grid-template-columns:clamp(70px,16cqw,104px) auto auto minmax(0,1fr) auto auto;gap:4px;padding-inline:6px}
+ #quickTools .tool:nth-child(n+3){display:none}
+}
+@container(max-width:530px){
+ .screen{--bar:42px}
+ .studybar{grid-template-columns:clamp(52px,16cqw,82px) auto auto minmax(0,1fr) auto auto;padding-inline:4px;gap:3px}
+ .studybar button{min-height:31px;padding:2px 5px}
+ #quickTools .tool{display:none}
+ #list{gap:2px}#list span{font-size:14px}#listLabel{font-size:12px}
+ #wallet,#gem{gap:3px}#wallet b,#gem strong{font:700 12px/1.2 system-ui,sans-serif;font-variant-numeric:tabular-nums}
+ #wallet .coin{width:14px;height:14px}#gem{min-width:43px}#gem img,#gem.available img{width:20px}#menu{width:31px}
+ #lessonTitle{font-size:11px}
+ .study{height:calc(var(--mock-height,clamp(360px,140cqw,580px)) - var(--bar))}
+}
+@media(max-width:650px){.previewControls{gap:5px 9px;margin-bottom:8px;font-size:11px}.previewControls select{padding:3px 4px}#sizeReadout{font-size:10px}}
+#listLabel .listDetail{font-style:normal}
+#wallet{width:142px;font-variant-numeric:tabular-nums}
+@container(max-width:850px){#wallet{width:134px}}
+@container(max-width:530px){#wallet{width:106px}#listLabel .listDetail{display:none}}
+@container(max-width:370px){#lessonTitle{visibility:hidden}}
+.study{container-type:size}
+#capture{position:relative;margin-inline:auto;width:min(100%,calc(100cqh * var(--shot-ratio,1.9)));aspect-ratio:var(--shot-ratio,1.9)}

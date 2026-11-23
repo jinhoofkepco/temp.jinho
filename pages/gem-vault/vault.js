@@ -3,7 +3,7 @@ const $=id=>document.getElementById(id),goal=5,key='gem-vault.study-layer.v1';
 const standardChest={minDrops:3,maxDrops:5};
 const maxSupportedDrops=10, maxWonPerDrop=10;
 const names={seoa:'서아',seoin:'서인'},lessons={seoa:'단어 시험 연습',seoin:'단어탐정'};
-const narrow=matchMedia('(max-width:650px)'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
+const reduced=matchMedia('(prefers-reduced-motion:reduce)');
 const fresh=()=>({gems:4,rolls:[],shown:0,ledger:[],answered:false,clue:false});
 function initial(){
  try{const d=JSON.parse(sessionStorage.getItem(key));if(d && Object.hasOwn(names,d.child)&&Object.keys(names).every(k=>{
@@ -54,7 +54,8 @@ function buildCollection(){
  paintCollection();
 }
 let opened=false,popup='',earning=null,charging=false,chargeTimer=0,revealTimer=0,toastTimer=0,audioContext;
-const won=v=>v.toLocaleString('ko-KR')+'원',balance=()=>current().ledger.reduce((a,b)=>a+b,0);
+const won=v=>v.toLocaleString('ko-KR')+'원',balance=()=>current().ledger.reduce((a,b)=>a+b,Number($('sample').value)||0);
+const balanceText=()=>$('sample').value==='offline'?'연결 확인':won(balance());
 const sum=()=>current().rolls.slice(0,current().shown).reduce((a,b)=>a+b,0);
 const activeRoll=()=>current().rolls.length>0,ready=()=>current().gems===goal||activeRoll();
 const notify=text=>{$('announce').textContent=text;};
@@ -72,11 +73,26 @@ function tone(hz,delay=0,length=.13,type='triangle'){
 }
 const canvas=$('fx'),ctx=canvas.getContext('2d'),particles=[];let frame=0,last=0;
 function center(el){const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};}
-function fit(){const d=Math.min(2,devicePixelRatio||1);canvas.width=innerWidth*d;canvas.height=innerHeight*d;ctx.setTransform(d,0,0,d,0,0);}
-addEventListener('resize',fit);fit();
+let pixelRatio=1;
+function fit(){
+ pixelRatio=Math.min(2,devicePixelRatio||1);
+ canvas.width=Math.round(canvas.clientWidth*pixelRatio);canvas.height=Math.round(canvas.clientHeight*pixelRatio);
+}
+new ResizeObserver(fit).observe(canvas);fit();
 const green=['#baffdc','#7df4bd','#66d9d4','#efffc1'],gold=['#ffd64b','#ffab30','#fa8243','#48e3c2','#fff3b4'];
 // Five staggered shells keep the launch, afterglow and falling sparks distinct.
 const shellSpeeds=[1.9,1.3,1.65,.82,.58];
+function creditSpark(el,colors,count,power){
+ if(reduced.matches)return;
+ const {x,y}=center(el);
+ particles.push({x,y,type:'ring',color:colors[0],life:.48,max:.48,power:power*.57});
+ for(let i=0;i<count;i++){
+  const angle=i/count*Math.PI*2,speed=(28+Math.random()*168)*power,life=.48+Math.random()*.66;
+  particles.push({x,y,dx:Math.cos(angle)*speed,dy:Math.sin(angle)*speed-25,life,max:life,size:2+Math.random()*4,spin:Math.random()*6,
+   color:colors[i%colors.length],type:i%5===0?'star':i%3===0?'prism':'spark'});
+ }
+ startFx();
+}
 function burst(el,colors,count,power=1){
   if(reduced.matches)return;
   const {x,y}=center(el);
@@ -129,17 +145,15 @@ function gemTrail(){
  const {x,y}=center(earning.sprite.firstChild);
  const point={x,y};
  if(earning.previous){
-  for(let strand=0;strand<5;strand++){
-   const side=strand-2;
-   const bend=12*Math.sin(progress*20+strand*.7)*(1-progress);
-   particles.push({a:earning.previous,b:point,color:strand===2?'#fffbdc':earning.color,side:side*3.2+bend,type:'trail',life:.32,max:.32});
-  }
+  particles.push({a:earning.previous,b:point,color:earning.color,side:0,type:'trail',life:.18,max:.18});
  }
  earning.previous=point;
 }
 function startFx(){if(!frame){last=performance.now();frame=requestAnimationFrame(draw);}}
 function draw(now){
-  const dt=Math.max(0,Math.min(.05,(now-last)/1000));last=now;ctx.clearRect(0,0,innerWidth,innerHeight);
+  const dt=Math.max(0,Math.min(.05,(now-last)/1000));last=now;const bounds=canvas.getBoundingClientRect();
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.setTransform(pixelRatio,0,0,pixelRatio,-bounds.left*pixelRatio,-bounds.top*pixelRatio);
   gemTrail();
   for(let i=particles.length-1;i>=0;i--){
     const p=particles[i];if(p.delay>0){p.delay-=dt;continue;}p.life-=dt;if(p.life<=0){particles.splice(i,1);continue;}
@@ -198,14 +212,19 @@ function hud(){
  $('gem').classList.toggle('available',chestReady);$('hudArt').src=chestReady?chestSrc(data.chestStyle):gemSrc();
  $('gemText').textContent=opened?'상자 접기':activeRoll()?'이어서':chestReady?'상자 열기':gems+'/5';
  $('gem').setAttribute('aria-label',opened?'보석상자 접기':chestReady?'보석상자 열기':'모은 보석 '+gems+'개, 다섯 개 필요');
- $('balance').textContent=won(balance());$('wallet').setAttribute('aria-label','통장 잔액 '+won(balance())+' 내역 열기');
- $('lessonName').textContent=names[data.child]+' · '+lessons[data.child];$('lessonTitle').textContent=lessons[data.child];
+ $('balance').textContent=balanceText();$('wallet').setAttribute('aria-label','통장 '+balanceText()+' · 내역 열기');
+ $('lessonName').textContent=names[data.child]+' · '+surfaceTitle();$('lessonTitle').textContent=surfaceTitle();
  $('tip').textContent=opened?(activeRoll()?'금액을 모두 모으면 통장에 적립돼요.':'가운데 상자를 눌러 열어 보세요.'):chestReady?'목록 옆의 상자를 눌러 열어 보세요.':'공부 보상을 받으면 보석이 목록 옆으로 날아가요.';
  $('simulate').disabled=Boolean(earning)||opened||chestReady;
  document.querySelectorAll('[data-child]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.child===data.child));});
 }
 function lesson(){
- const s=current(),shot=(data.child==='seoin'&&s.clue?'clue':data.child)+'-'+(narrow.matches?'narrow':'wide');
+ const activity=$('surface').value==='activity';
+ $('samplePage').hidden=activity;$('capture').hidden=!activity;
+ $('sampleSource').textContent=(activity?'공부 화면 캡처':'화면 배치 예시')+' · 체험용 잔액';
+ renderToolbar();
+ if(!activity){renderSamplePage();return;}
+ const s=current(),shot=(data.child==='seoin'&&s.clue?'clue':data.child)+'-'+($('study').clientWidth<=650?'narrow':'wide');
  $('studyImage').src='assets/'+shot+'.webp';$('studyImage').alt=names[data.child]+'의 '+lessons[data.child]+' 예시 화면';
  $('zones').replaceChildren();
  for(const z of studyZones[shot]){
@@ -223,7 +242,7 @@ function lesson(){
 }
 function choose(child){if(opened)closeReward();cancelGem();closePopup();$('toast').hidden=true;data.child=child;save();lesson();hud();}
 document.querySelectorAll('[data-child]').forEach(b=>b.onclick=()=>choose(b.dataset.child));
-narrow.addEventListener('change',lesson);
+
 function cancelGem(){
  if(!earning)return;
  earning.animation.cancel();earning.sprite.remove();earning=null;
@@ -247,10 +266,10 @@ function earn(source){
   {offset:1,opacity:.3,transform:pose(dx,dy,.16)}
  ],{duration:reduced.matches?100:1500,easing:'linear',fill:'both'});
  const color=gemStyles[data.gemStyle][1];
- earning={animation,sprite,color};hud();burst(art,[color,'#fff7c7','#e3fffa'],19,.55);tone(659,0,.18,'sine');tone(1318,.06,.18,'sine');
+ earning={animation,sprite,color};hud();creditSpark(art,[color,'#fff7c7','#e3fffa'],19,.55);tone(659,0,.18,'sine');tone(1318,.06,.18,'sine');
  animation.onfinish=()=>{
   if(earning?.animation!==animation)return;
-  sprite.remove();earning=null;hud();bop($('gem'));burst($('hudArt'),s.gems===goal?gold:green,30,.58);
+  sprite.remove();earning=null;hud();bop($('gem'));creditSpark($('hudArt'),s.gems===goal?gold:green,30,.58);
   tone(988);if(s.gems===goal){
    tone(1244,.10);notify('보석 다섯 개. 보석상자 열기');
    if(!popup)openReward();
@@ -262,23 +281,37 @@ $('simulate').onclick=()=>earn($('simulate'));
 function closePopup(){popup='';$('popover').hidden=true;for(const id of ['menu','list','gem','wallet'])$(id).setAttribute('aria-expanded','false');}
 function popText(text){const p=document.createElement('p');p.textContent=text;$('popBody').append(p);}
 function row(text,click){const b=document.createElement('button');b.className='row';b.textContent=text;b.onclick=click;$('popBody').append(b);}
+function positionPopup(){
+ if(!popup)return;
+ const host=document.querySelector('.screen').getBoundingClientRect();
+ const box=$('popover'),button=$(popup).getBoundingClientRect();
+ const start=popup==='menu'?button.right-host.left-box.offsetWidth:button.left-host.left;
+ box.style.left=Math.max(4,Math.min(start,host.width-box.offsetWidth-5))+'px';box.style.right='auto';
+}
 function showPopup(kind){
  if(opened)closeReward();if(popup===kind){closePopup();return;}
  closePopup();popup=kind;$('toast').hidden=true;const box=$('popover'),s=current();
  box.hidden=false;box.classList.toggle('menu',kind==='menu');$(kind).setAttribute('aria-expanded','true');$('popBody').replaceChildren();
  $('popTitle').textContent={gem:'모은 보석',wallet:names[data.child]+'의 체험 통장',list:'공부 목록',menu:'전체 메뉴'}[kind];
  if(kind==='wallet'){
-  popText('현재 잔액 '+won(balance()));
+  popText($('sample').value==='offline'?'통장 연결 확인 중':'현재 잔액 '+won(balance()));
   if(!s.ledger.length)popText('상자를 열면 여기에 적립 내역이 생겨.');
   s.ledger.slice().reverse().forEach((v,i)=>{const li=document.createElement('div'),n=document.createElement('b');li.className='ledger';li.append('보석상자 '+(s.ledger.length-i)+'회');n.textContent='+'+won(v);li.append(n);$('popBody').append(li);});
  }else if(kind==='gem'){
   const m=document.createElement('div');m.className='meter';for(let i=0;i<goal;i++){const g=document.createElement('i');if(i<s.gems)g.className='on';m.append(g);}$('popBody').append(m);popText('보석 '+(goal-s.gems)+'개를 더 모으면 상자가 열려.');
- }else if(kind==='list'){row(lessons[data.child]+' · 공부로 돌아가기',closePopup);}
+ }else if(kind==='list'){
+  if($('surface').value==='home'){
+   for(const day of ['11.23','11.22'])row(day+' 숙제',()=>{sampleDay=day;closePopup();lesson();hud();});
+  }
+  for(const option of $('surface').options)row(surfaceTitle(option.value),()=>changeSurface(option.value));
+ }
  else{
+  for(const tool of $('quickTools').children)if(!tool.getClientRects().length)row(tool.textContent,()=>useTool(tool.textContent));
   row($('gem').ariaLabel,()=>$('gem').click());
-  row('통장 내역 · '+won(balance()),()=>showPopup('wallet'));
+  row('통장 내역 · '+balanceText(),()=>showPopup('wallet'));
   row(data.sound?'효과음 끄기':'효과음 켜기',()=>{data.sound=!data.sound;unlock();save();closePopup();showPopup('menu');});
  }
+ positionPopup();
 }
 $('list').onclick=()=>showPopup('list');$('menu').onclick=()=>showPopup('menu');$('wallet').onclick=()=>showPopup('wallet');
 $('gem').onclick=()=>{if(earning)return;if(opened)closeReward();else if(ready())openReward();else showPopup('gem');};$('popClose').onclick=()=>{const id=popup;closePopup();$(id)?.focus();};
@@ -365,7 +398,7 @@ function reveal(){
  const item=addDrop(value),lastDrop=s.shown===s.rolls.length;
  const accent=chestStyles[data.chestStyle].accent;
  if(lastDrop){layer.classList.add('finalBurst');impact(chest,accent,1.2);tone(98,0,.31,'sine');}
- burst(item,[accent,...gold],lastDrop ? 48 : 19,lastDrop ? .96 : .63);
+ creditSpark(item,[accent,...gold],lastDrop ? 48 : 19,lastDrop ? .96 : .63);
  if(!reduced.matches)$('chestArt').animate([{transform:'scale(1)'},{transform:'scale(1.06,.94)'},{transform:'scale(.98,1.04)'},{transform:'scale(1)'}],{duration:270});
  const note=392*2**((s.shown-1)/6);
  tone(note,0,.23);tone(note*2,.035,.16,'sine');if(lastDrop||value>=8)tone(note*3,.10,.20,'sine');
@@ -383,10 +416,78 @@ function deposit(){
  const s=current();
  if(!opened||!activeRoll()||s.shown!==s.rolls.length)return;
  const credit=sum();s.ledger.push(credit);s.rolls=[];s.shown=0;save();
- closeReward();bop($('wallet'));impact($('wallet'),'#ffc24d',.58);burst($('wallet'),gold,30,.75);
+ closeReward();bop($('wallet'));creditSpark($('wallet'),gold,30,.75);
  [784,988,1175].forEach((f,i)=>tone(f,i*.09,.22));toast('통장에 +'+won(credit));
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(opened)closeReward();else closePopup();}});
 addEventListener('pagehide',()=>{cancelGem();closeReward();});
 addEventListener('pageshow',e=>{if(e.persisted)hud();});
+
+let sampleDay='11.23';
+function surfaceTitle(surface=$('surface').value){
+ return {activity:lessons[data.child],home:'숙제 목록',book:'리딩 · The Lantern in the Garden',question:'영어 공부질문'}[surface];
+}
+function changeSurface(value){
+ closeReward();cancelGem();closePopup();$('toast').hidden=true;$('surface').value=value;lesson();hud();
+}
+const inlineTools={
+ home:['황금시계','클릭질문'],
+ book:['듣기','쉬는 시간','클릭질문','음성질문'],
+ question:['쉬는 시간','클릭질문'],
+ activity:['듣기','쉬는 시간','클릭질문','음성질문']
+};
+function useTool(label){
+ closeReward();closePopup();
+ if(label==='클릭질문'||label==='음성질문'){changeSurface('question');return;}
+ toast(label+' · 목업 미리보기');
+}
+function renderToolbar(){
+ const surface=$('surface').value,home=surface==='home';
+ $('listLabel').textContent=home?sampleDay:'목록';
+ if(surface==='book'){
+  const detail=document.createElement('em');detail.className='listDetail';detail.textContent=' · 리딩 1 / 3';$('listLabel').append(detail);
+ }
+ $('list').ariaLabel=home?'숙제 날짜 '+sampleDay:'공부 목록';
+ $('list').firstElementChild.textContent=home?'▦':'☷';
+ $('quickTools').replaceChildren();
+ for(const label of inlineTools[surface]){
+  const button=document.createElement('button');button.className='tool';button.textContent=label;
+  button.onclick=()=>useTool(label);$('quickTools').append(button);
+ }
+}
+function renderSamplePage(){
+ const page=$('samplePage'),surface=$('surface').value;page.replaceChildren();page.dataset.surface=surface;
+ function add(tag,text){const el=document.createElement(tag);el.textContent=text;page.append(el);return el;}
+ if(surface==='home'){
+  add('small',names[data.child]+' · '+sampleDay);add('h2','오늘의 숙제');
+  for(const [key,label] of [['question','공부 영어질문'],['book',surfaceTitle('book')],['activity',lessons[data.child]]]){
+   const b=add('button',label);b.className='homeActivity';b.onclick=()=>changeSurface(key);
+  }
+ }else if(surface==='book'){
+  add('small','READING · 1 / 3');add('h2','The Lantern in the Garden');
+  add('p','At the garden gate, a little lantern swung in the wind. Mina held it still and saw a tiny silver key beneath the leaves.');
+  add('p','She lifted the key. Across the path, a wooden door stood half open.');
+ }else{
+  add('small',names[data.child]+' · 영어');add('h2','영어 공부질문');add('p','어떤 영어 표현이 궁금해?');
+  const b=add('button','질문 고르기');b.className='homeActivity';b.onclick=()=>{b.replaceWith(document.createTextNode('“beneath the leaves”는 무슨 뜻일까?'));};
+ }
+}
+$('surface').onchange=()=>changeSurface($('surface').value);
+$('sample').onchange=()=>{closePopup();hud();};
+$('device').onchange=()=>{
+ const [w,h]=$('device').value.split('x').map(Number),frame=$('previewFrame');
+ frame.style.width=w?w+'px':'';frame.style.setProperty('--mock-height',h?h+'px':'');
+};
+let previousNarrow;
+new ResizeObserver(()=>{
+ const width=$('study').clientWidth,narrow=width<=650;
+ $('sizeReadout').textContent=width+' px';
+ if(narrow!==previousNarrow){previousNarrow=narrow;lesson();}
+ if(popup==='menu'){closePopup();showPopup('menu');}
+ positionPopup();arrangeDrops();
+}).observe($('study'));
+$('studyImage').onload=()=>{
+ const img=$('studyImage');
+ if(img.naturalHeight)$('capture').style.setProperty('--shot-ratio',img.naturalWidth/img.naturalHeight);
+};
 lesson();buildCollection();
