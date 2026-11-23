@@ -89,23 +89,26 @@ function paintTime() {
     el.style.opacity = opacity;
     el.style.visibility = opacity === 0 ? "hidden" : "visible";
     el.setAttribute("aria-hidden", String(opacity === 0));
-    const stamp = ticks + "/" + (dad ? Math.floor(s) : "");
-    if (el.dataset.stamp === stamp) continue;
-    el.dataset.stamp = stamp;
-    const pack =
-      '<span class="rod-pack" aria-hidden="true">' +
-      rod(true).repeat(6) +
-      "<b>1분</b></span>";
-    const packs =
-      min <= 2
-        ? pack.repeat(min)
-        : pack + '<small class="times">×' + min + "</small>";
-    el.innerHTML =
-      packs +
-      '<span class="rod-unit" aria-hidden="true">' +
-      Array.from({ length: 6 }, (_, i) => rod(i < rest)).join("") +
-      "</span>" +
-      (dad ? "<time>" + formatTime(s) + "</time>" : "");
+    const stamp = String(ticks);
+    if (el.dataset.stamp !== stamp) {
+      el.dataset.stamp = stamp;
+      const pack = '<span class="rod-pack">' + rod(true).repeat(6) + "</span>";
+      // Keep the newest groups on the right even on a narrow phone.
+      const history = min
+        ? '<span class="rod-history" aria-hidden="true">' +
+          pack.repeat(Math.min(min, 1440)) +
+          "</span>"
+        : "";
+      el.innerHTML =
+        history +
+        '<span class="rod-unit" aria-hidden="true">' +
+        Array.from({ length: 6 }, (_, i) => rod(i < rest)).join("") +
+        "</span>" +
+        (dad ? "<time></time>" : "");
+    }
+    const exact = dad ? formatTime(s) : "";
+    if (dad && el.lastElementChild.textContent !== exact)
+      el.lastElementChild.textContent = exact;
     el.setAttribute(
       "aria-label",
       dad ? "경과 " + formatTime(s) : min + "분 " + rest * 10 + "초",
@@ -690,11 +693,15 @@ document.querySelectorAll("[data-expand]").forEach(
           : "제출 전에는 이 위에 필기할 수 있습니다.";
       bindCanvas(canvas);
       draw(canvas, role);
+      $("zoomClock").dataset.clock = role;
+      delete $("zoomClock").dataset.stamp;
       $("zoom").showModal();
+      paintTime();
     }),
 );
 $("closeZoom").onclick = () => $("zoom").close();
 $("zoom").onclose = () => {
   $("zoomPaper").replaceChildren();
+  delete $("zoomClock").dataset.clock;
 };
 if (!moveToPrivateScreen) init();

@@ -181,20 +181,30 @@ main {
   gap: 2px;
   position: relative;
 }
-.rod-pack {
-  padding: 2px 4px 9px;
-  border-radius: 4px;
-  background: #e4edda;
+.rod-history {
+  min-width: 0;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 4px;
 }
-.rod-pack b {
+.rod-pack,
+.rod-unit,
+.clock time {
+  flex: none;
+}
+.rod-pack {
+  padding: 0 0 4px;
+}
+.rod-pack::after {
+  content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  color: #315840;
-  font-size: 8px;
-  line-height: 1;
-  text-align: center;
+  inset: auto 0 0;
+  height: 3px;
+  border-radius: 2px;
+  background: #f1e4a9;
 }
 .rod {
   display: block;
@@ -207,8 +217,7 @@ main {
   background: transparent url(art/time-rod.webp) center/100% 100% no-repeat;
 }
 .rod-unit {
-  border-bottom: 1px solid #c2cec0;
-  padding: 1px 0 2px;
+  padding-bottom: 4px;
 }
 .rod-pack .rod {
   height: clamp(10px, 3.6cqw, 16px);
@@ -407,11 +416,8 @@ dialog p {
   .rod-unit {
     gap: 1px;
   }
-  .rod-pack {
-    padding: 2px 2px 7px;
-  }
-  .rod-pack b {
-    font-size: 7px;
+  .rod-history {
+    gap: 3px;
   }
   .page-title,
   .actionbar {
@@ -448,9 +454,33 @@ dialog p {
   }
 }
 
-.times {
-  font-size: 10px;
-  color: #425e48;
+.reader-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.reader-menu button {
+  font-size: 12px;
+  padding: 4px 7px;
+}
+.clock {
+  margin-left: auto;
+  min-width: 0;
+}
+.page-title > span {
+  flex: none;
+}
+#zoomClock {
+  margin-top: 3px;
+}
+@media (max-width: 600px) {
+  .reader-menu button {
+    font-size: 11px;
+    padding: 3px 5px;
+  }
+  .clock {
+    min-height: 21px;
+  }
 }
 .clock time {
   letter-spacing: -0.06em;

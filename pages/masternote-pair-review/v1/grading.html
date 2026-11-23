@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#f7f7ef" />
     <title>풀이 시간과 제출 · 마스터노트</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="grading.css?v=3" />
+    <link rel="stylesheet" href="grading.css?v=4" />
   </head>
   <body>
     <header class="mast">
@@ -41,17 +41,20 @@
               <small>Tab S11</small>
               <h2>서아</h2>
             </div>
-            <div class="clock" data-clock="kid"></div>
+            <div class="reader-menu" role="group" aria-label="서아 풀이 메뉴">
+              <button
+                class="enlarge"
+                data-expand="kid"
+                aria-label="서아 풀이 확대"
+              >
+                확대
+              </button>
+              <button id="submit" class="primary">제출</button>
+            </div>
           </header>
           <div class="page-title">
-            <span>예제 4-1</span
-            ><button
-              class="enlarge"
-              data-expand="kid"
-              aria-label="서아 풀이 확대"
-            >
-              확대
-            </button>
+            <span>예제 4-1</span>
+            <div class="clock" data-clock="kid" role="img"></div>
           </div>
           <div class="paper">
             <canvas
@@ -62,8 +65,7 @@
             ></canvas>
           </div>
           <div class="actionbar">
-            <span id="kidState">풀이 중</span
-            ><button id="submit" class="primary">제출</button>
+            <span id="kidState">풀이 중</span>
           </div>
           <div id="kidReply" class="reply" hidden aria-live="polite"></div>
         </article>
@@ -73,17 +75,20 @@
               <small>S23 Ultra</small>
               <h2>아빠</h2>
             </div>
-            <div class="clock" data-clock="dad"></div>
+            <div class="reader-menu" role="group" aria-label="아빠 풀이 메뉴">
+              <button
+                class="enlarge"
+                data-expand="dad"
+                aria-label="아빠 풀이 확대"
+              >
+                확대
+              </button>
+              <button id="reopen" hidden>직접 채점</button>
+            </div>
           </header>
           <div class="page-title">
-            <span>서아 풀이</span
-            ><button
-              class="enlarge"
-              data-expand="dad"
-              aria-label="아빠 풀이 확대"
-            >
-              확대
-            </button>
+            <span>서아 풀이</span>
+            <div class="clock" data-clock="dad" role="img"></div>
           </div>
           <div class="paper">
             <canvas
@@ -96,7 +101,7 @@
           <div class="actionbar">
             <span class="signal" id="dadState" aria-live="polite"
               >같은 쪽 보기</span
-            ><button id="reopen" hidden>직접 채점</button>
+            >
           </div>
           <section
             class="intervene"
@@ -132,10 +137,10 @@
       <section class="time-test">
         <header>
           <h3>시간 변화 보기</h3>
-          <span>10초에 한 칸 · 여섯 칸에 1분</span>
+          <span>10초에 한 칸 · 여섯 칸마다 밑줄</span>
         </header>
         <div class="time-controls">
-          <button data-time="minute">1분 묶음</button
+          <button data-time="minute">첫 묶음</button
           ><button data-time="fade">2/3 지점</button
           ><button data-time="middle">페이드 중간</button
           ><button data-time="hidden">숨긴 뒤</button
@@ -147,10 +152,11 @@
           <b id="zoomTitle"></b
           ><button id="closeZoom" aria-label="닫기">닫기</button>
         </header>
+        <div id="zoomClock" class="clock" role="img"></div>
         <div id="zoomPaper" class="paper"></div>
         <p id="zoomHelp"></p>
       </dialog>
     </main>
-    <script src="grading.js?v=3"></script>
+    <script src="grading.js?v=4"></script>
   </body>
 </html>
