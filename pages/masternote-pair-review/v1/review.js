@@ -1082,9 +1082,8 @@ function readerClick(button) {
   } else if (a === "submit") {
     responseFor(mode, "kid").submitted = true;
     if (current.id === "submit") {
-      setStep(1);
-      if (modal === "zoom") zoom(zoomRole);
-      return true;
+      location.assign("./grading.html");
+      return;
     }
     readerLayers.kid = "submitted";
   } else readerLayers[role] = a;
@@ -1093,6 +1092,7 @@ function readerClick(button) {
 }
 
 function paint() {
+  $("gradeTry").hidden = !["goal", "submit"].includes(current.id);
   if (current.states[step].includes("ten") && typePages[0].length < 10)
     addQuestions(0);
   $("title").textContent = current.title;

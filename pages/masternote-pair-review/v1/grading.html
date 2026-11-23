@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#f7f7ef" />
+    <title>풀이 시간과 제출 · 마스터노트</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="grading.css?v=3" />
+  </head>
+  <body>
+    <header class="mast">
+      <b>MasterNote</b><span>풀이 시간과 제출</span
+      ><small id="connection">화면 미리보기</small>
+    </header>
+    <main>
+      <header class="intro">
+        <div>
+          <small>중1 하 · 기본 작도</small>
+          <h1>수선 작도</h1>
+        </div>
+        <label
+          >목표
+          <select id="target" aria-label="한 문제의 목표 시간">
+            <option value="60">1분</option>
+            <option value="120" selected>2분</option>
+            <option value="180">3분</option>
+            <option value="300">5분</option>
+          </select></label
+        >
+      </header>
+      <section class="pair" aria-label="두 화면 비교">
+        <article class="device student" data-role="kid">
+          <header class="device-top">
+            <div>
+              <small>Tab S11</small>
+              <h2>서아</h2>
+            </div>
+            <div class="clock" data-clock="kid"></div>
+          </header>
+          <div class="page-title">
+            <span>예제 4-1</span
+            ><button
+              class="enlarge"
+              data-expand="kid"
+              aria-label="서아 풀이 확대"
+            >
+              확대
+            </button>
+          </div>
+          <div class="paper">
+            <canvas
+              data-paper="kid"
+              width="910"
+              height="348"
+              aria-label="서아 풀이, 문제 위에 필기 가능"
+            ></canvas>
+          </div>
+          <div class="actionbar">
+            <span id="kidState">풀이 중</span
+            ><button id="submit" class="primary">제출</button>
+          </div>
+          <div id="kidReply" class="reply" hidden aria-live="polite"></div>
+        </article>
+        <article class="device teacher" data-role="dad">
+          <header class="device-top">
+            <div>
+              <small>S23 Ultra</small>
+              <h2>아빠</h2>
+            </div>
+            <div class="clock" data-clock="dad"></div>
+          </header>
+          <div class="page-title">
+            <span>서아 풀이</span
+            ><button
+              class="enlarge"
+              data-expand="dad"
+              aria-label="아빠 풀이 확대"
+            >
+              확대
+            </button>
+          </div>
+          <div class="paper">
+            <canvas
+              data-paper="dad"
+              width="910"
+              height="348"
+              aria-label="아빠가 확인하는 풀이와 첨삭"
+            ></canvas>
+          </div>
+          <div class="actionbar">
+            <span class="signal" id="dadState" aria-live="polite"
+              >같은 쪽 보기</span
+            ><button id="reopen" hidden>직접 채점</button>
+          </div>
+          <section
+            class="intervene"
+            id="intervene"
+            hidden
+            aria-label="아빠 채점"
+          >
+            <h3>아빠가 직접 채점</h3>
+            <div class="choices" role="group" aria-label="판정 선택">
+              <button data-verdict="correct">○ 정답</button
+              ><button data-verdict="wrong">× 다시 풀기</button
+              ><button data-verdict="incomplete">풀이 보완</button>
+            </div>
+            <label class="sr" for="feedback">서아에게 보낼 답변</label
+            ><textarea
+              id="feedback"
+              placeholder="서아에게 보낼 답변"
+              rows="2"
+              maxlength="600"
+            ></textarea>
+            <div class="mark-actions">
+              <button id="pen" aria-pressed="false">첨삭 펜</button
+              ><button id="undo" disabled aria-label="최근 첨삭 지우기">
+                ↶
+              </button>
+            </div>
+            <button id="send" class="primary" disabled>답변·첨삭 보내기</button>
+          </section>
+          <div class="reply" id="dadReply" hidden></div>
+        </article>
+      </section>
+      <p id="hint" role="status"></p>
+      <section class="time-test">
+        <header>
+          <h3>시간 변화 보기</h3>
+          <span>10초에 한 칸 · 여섯 칸에 1분</span>
+        </header>
+        <div class="time-controls">
+          <button data-time="minute">1분 묶음</button
+          ><button data-time="fade">2/3 지점</button
+          ><button data-time="middle">페이드 중간</button
+          ><button data-time="hidden">숨긴 뒤</button
+          ><button id="restart">처음부터</button>
+        </div>
+      </section>
+      <dialog id="zoom">
+        <header>
+          <b id="zoomTitle"></b
+          ><button id="closeZoom" aria-label="닫기">닫기</button>
+        </header>
+        <div id="zoomPaper" class="paper"></div>
+        <p id="zoomHelp"></p>
+      </dialog>
+    </main>
+    <script src="grading.js?v=3"></script>
+  </body>
+</html>
